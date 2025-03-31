@@ -1,0 +1,7 @@
+* 
+* @Author: <author> (email)
+* @File: $TM_FILENAME
+* @Copyright: (c) $CURRENT_YEAR
+* @Brief: ${1:description}
+* @Created:  !date_crea!
+* @Updated: !date!
