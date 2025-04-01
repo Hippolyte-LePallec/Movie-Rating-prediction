@@ -27,6 +27,9 @@
         <li class="nav-item">
           <a class="nav-link text-light" href="?page=statistiques">Statistiques</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href=".\pages\views\maker.php">film maker</a>
+        </li>
       </ul>
 
       <!-- Barre de recherche -->
