@@ -25,10 +25,10 @@
           <a class="nav-link text-light" href="?page=series">Séries</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-light" href="?page=statistiques">Statistiques</a>
+          <a class="nav-link text-light" href=".\pages\views\Statistiques.php">Statistiques</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-light" href=".\pages\views\maker.php">film maker</a>
+          <a class="nav-link text-light" href=".\pages\views\Maker.php">film maker</a>
         </li>
       </ul>
 

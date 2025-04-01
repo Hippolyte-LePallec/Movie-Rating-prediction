@@ -24,7 +24,7 @@
             <div class="w3-row-padding">
                 <div class="w3-half">
                     <label for="date_sortie">Date de sortie :</label>
-                    <input class="w3-input w3-border" type="date" id="date_sortie" name="date_sortie" required>
+                    <input class="w3-input w3-border" type="year" id="date_sortie" name="date_sortie" required>
                 </div>
                 <div class="w3-half">
                     <label for="genre">Genre :</label>
