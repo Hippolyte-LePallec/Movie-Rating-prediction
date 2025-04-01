@@ -1,18 +1,18 @@
 <?php
-session_start(); // Démarrage de la session
-// print_r($_SESSION);
-// exit();
+session_start();
+
+
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
 $db = require(dirname(__FILE__) . '/lib/mypdo.php');
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 
 <head>
-    <meta charset="utf-8">
-    <title>TD3 - Connexion</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="css/styles.css">
@@ -20,28 +20,25 @@ $db = require(dirname(__FILE__) . '/lib/mypdo.php');
 </head>
 
 <body>
-    <div class="maincontent  w3-display-container w3-center">
+    <div class="maincontent w3-display-container w3-center">
         <div class="dtitle w3-container w3-teal">
             <h1>Bienvenue sur le portail de votre projet !</h1>
         </div>
 
-        <form action="check_login.php" method="post">
+        <h1>Connexion</h1>
+        <form action="check_login.php" method="POST">
             <div class="container">
-                <label for="uname"><b>Username</b></label>
-                <input type="text" placeholder="Identifiant" name="uname" required>
-
-                <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Mot de passe" name="psw" required>
-                <?php if (is_null($db)) {
-                ?>
-                    <input type="submit" name="connect" value="Impossible de Se connecter" disabled />
-                <?php
-                } else {
-                ?>
-                    <input type="submit" name="connect" value="Se connecter" />
-                <?php
-                }
-                ?>
+                <label for="username">Nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" required>
+                <br>
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" required>
+                <br>
+                <?php if (is_null($db)) { ?>
+                    <button type="submit" disabled>Impossible de Se connecter</button>
+                <?php } else { ?>
+                    <button type="submit">Se connecter</button>
+                <?php } ?>
             </div>
         </form>
     </div>
