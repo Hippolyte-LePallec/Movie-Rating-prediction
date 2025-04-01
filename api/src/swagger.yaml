@@ -1,0 +1,114 @@
+openapi: 3.0.0
+info:
+  title: Pokémon TCG API
+  description: API for managing Pokémon cards, users, attacks, and decks
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /users:
+    post:
+      summary: Create a new user
+      requestBody:
+        description: User data to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  email:
+                    type: string
+        500:
+          description: Failed to create user
+
+  /users/login:
+    post:
+      summary: User login
+      requestBody:
+        description: Login credentials (email & password)
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Login successful, returns JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                  message:
+                    type: string
+        401:
+          description: Invalid credentials
+        500:
+          description: Failed to login
+  /users/{userId}:
+    get:
+      summary: Get a user by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: The user details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  email:
+                    type: string
+        404:
+          description: User not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
