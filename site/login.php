@@ -1,9 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['user'])) {
-    header('Location: index.php');
-    exit();
-}
+
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 

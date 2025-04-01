@@ -1,5 +1,6 @@
 <?php include('../../inc/head.php'); ?>
 <?php include('../../inc/top.php'); ?>
+
 <div class="dtitle w3-container w3-teal">
     <h2><?= "Film Maker" ?></h2>
 </div>
@@ -48,8 +49,5 @@
 
     </form>
 </div>
-
-<script>
-</script>
 
 <?php include('../../inc/footer.php'); ?>
