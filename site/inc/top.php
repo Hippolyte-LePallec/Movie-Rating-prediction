@@ -1,35 +1,50 @@
 <!-- Navbar -->
-<div class="w3-top">
-  <div class="w3-bar w3-card">
-    <!-- User Dropdown -->
-    <div class="w3-dropdown-hover">
-      <button class="w3-bar-item w3-button logo">Bienvenue <?= htmlspecialchars($_SESSION['login']); ?></button>
-      <div class="w3-dropdown-content w3-bar-block w3-card-4">
-        <a href="index.php" class="w3-bar-item w3-button">Accueil</a>
-        <a href="#" class="w3-bar-item w3-button">
-          <i><?= htmlspecialchars($_SESSION['user']['firstname'] . ' ' . $_SESSION['user']['lastname']); ?></i>
-        </a>
-        <a href="delog.php" class="w3-bar-item w3-button">
-          <i class="fa-solid fa-person-walking-arrow-right"></i> Se déconnecter
-        </a>
-      </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <!-- Logo -->
+    <a class="navbar-brand fw-bold text-warning" href="index.php">
+      <i class="fas fa-film"></i> Film & Style
+    </a>
+
+    <!-- Bouton pour mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Contenu de la navbar -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Liens principaux -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link text-light" href="index.php">Accueil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="?page=films">Films</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="?page=series">Séries</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="?page=statistiques">Statistiques</a>
+        </li>
+      </ul>
+
+      <!-- Barre de recherche -->
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Rechercher..." aria-label="Search">
+        <button class="btn btn-outline-light" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+
+      <!-- Connexion -->
+      <ul class="navbar-nav ms-3">
+        <li class="nav-item">
+          <a class="nav-link text-light" href="#" data-bs-toggle="modal" data-bs-target="#connexionModal">
+            <i class="fas fa-sign-in-alt"></i> Connexion
+          </a>
+        </li>
+      </ul>
     </div>
-
-    <!-- Dynamic Menus -->
-    <?php
-    $list_menus = array(
-      'etudiants' => 'Les étudiants'
-    );
-    
-
-    foreach ($list_menus as $key => $menu): ?>
-      <div class="w3-dropdown-hover">
-        <a href="index.php?element=<?= urlencode($key); ?>" class="w3-bar-item w3-button"><?= htmlspecialchars($menu); ?></a>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-            <a href="index.php?element=<?= urlencode($key); ?>&action=list" class="w3-bar-item w3-button">Liste</a>
-            <a href="index.php?element=<?= urlencode($key); ?>&action=add" class="w3-bar-item w3-button">Nouveau</a>
-        </div>
-      </div>
-    <?php endforeach; ?>
   </div>
-</div>
+</nav>
