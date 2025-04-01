@@ -1,3 +1,13 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
 .maincontent {
   padding-top: 30px;
 }
@@ -124,7 +134,7 @@ span.psw {
 
 /* Style the active/current link*/
 .header a.active {
-  background-color: dodgerblue;
+  background-color: rgb(0, 0, 100);
   color: white;
 }
 
@@ -157,7 +167,7 @@ tr:nth-child(odd) {
 }
 
 .quicksave {
-  color: blue;
+  color: rgb(0, 0, 100);
   font-weight: bold;
 }
 
@@ -187,6 +197,7 @@ th.right {
 
 .medium {
   width: 150px;
+
 }
 
 .tdid {
@@ -222,7 +233,7 @@ th.right {
 }
 
 .tabQuickActions input {
-  color: blue;
+  color: rgb(0, 0, 100);
   border-style: double;
 }
 
@@ -277,10 +288,63 @@ th.right {
   border-left: 1px solid #cccccc;
 }
 
+/* Navbar custom styles */
+.navbar {
+  box-shadow: 0 2px 5px rgba(2, 0, 141, 0.1);
+}
 
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+  padding: 0.5rem 1rem;
+}
+
+.navbar .form-control {
+  max-width: 300px;
+}
+
+/* Footer styles */
 .footer {
-  background-color: var(--primary-color);
-  color: var(--light-text);
-  padding: 20px 0;
-  margin-top: 40px;
+  background-color: #080080;
+  color: #ffffff;
+}
+
+.footer a {
+  color: #adb5bd;
+  text-decoration: none;
+}
+·
+.footer a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Cards */
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.badge {
+  font-size: 0.8rem;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* delete border */
+  border: none;
 }
