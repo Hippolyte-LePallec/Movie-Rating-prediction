@@ -19,10 +19,10 @@ class myAuthClass
         );
         $sql = 'SELECT '.implode(', ', $fields).' ';
         $sql .= 'FROM mp_users ';
-        $sql .= 'WHERE username = :username AND password = :passhash';
+        $sql .= 'WHERE username = :username AND password = :password';
         $statement = $db->prepare($sql);
-        $statement->bindValue(':username', $username, PDO::PARAM_STR);
-        $statement->bindValue(':passhash', md5($password), PDO::PARAM_STR);
+        $statement->bindValue(':username', $username, PDO::PARAM_STR); 
+        $statement->bindValue(':password', $password, PDO::PARAM_STR); // Non crypter 
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         return $result;

@@ -39,19 +39,19 @@ $db = require(dirname(__FILE__) . '/lib/mypdo.php');
                 
                 <form action="check_login.php" method="POST">
                     <div class="mb-3">
-                        <label for="username" class="form-label">
+                        <label for="uname" class="form-label">
                             <i class="fas fa-user-circle"></i>
                             Nom d'utilisateur
                         </label>
-                        <input type="text" id="username" name="username" class="form-control" required>
+                        <input type="text" id="username" name="uname" class="form-control" required>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="password" class="form-label">
+                        <label for="psw" class="form-label">
                             <i class="fas fa-key"></i>
                             Mot de passe
                         </label>
-                        <input type="password" id="password" name="password" class="form-control" required>
+                        <input type="password" id="password" name="psw" class="form-control" required>
                     </div>
                     
                     <div class="d-grid mt-4">
