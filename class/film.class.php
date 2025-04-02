@@ -13,7 +13,7 @@ class Film {
 
     public function fetchAll($page = 1, $perPage = 10) {
         $offset = ($page - 1) * $perPage;
-
+    
         $stmt = $this->db->prepare("
             SELECT m.*, 
                    string_agg(g.genre_name, ', ') AS genre_names
@@ -21,6 +21,7 @@ class Film {
             LEFT JOIN media_genre mg ON m.media_id = mg.media_id
             LEFT JOIN genre g ON mg.genre_id = g.genre_id
             GROUP BY m.media_id
+            ORDER BY m.primaryTitle ASC
             LIMIT :perPage OFFSET :offset
         ");
         
