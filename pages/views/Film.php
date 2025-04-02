@@ -7,11 +7,14 @@
                 </div>
 
                 <div class="card-body">
-                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+                    <div
+                        class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
                         <?php foreach ($films as $film): ?>
                             <div class="col">
-                                <div class="card h-100 bg-dark text-light border-secondary shadow-lg rounded">
-                                    <img src="/api/placeholder/185/278" class="card-img-top rounded" alt="Film poster">
+                                <div
+                                    class="card h-100 bg-dark text-light border-secondary shadow-lg rounded">
+                                    <!-- Vérification de l'existence de l'image du film, sinon image par défaut -->
+                                    <img src="<?= !empty($film['imageUrl']) ? $film['imageUrl'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg' ?>" class="card-img-top rounded" alt="Film poster">
                                     <div class="card-body">
                                         <h5 class="card-title text-warning"><?= htmlspecialchars($film['primaryTitle']) ?></h5>
                                         <p class="card-text small"><?= htmlspecialchars($film['startYear']) ?></p>
@@ -31,7 +34,8 @@
                     </div>
 
                     <nav class="mt-4">
-                        <ul class="pagination justify-content-center">
+                        <ul
+                            class="pagination justify-content-center">
                             <?php if ($page > 1): ?>
                                 <li class="page-item">
                                     <a class="page-link bg-warning text-dark rounded-pill" href="index.php?element=pages&action=Film&page=<?= $page - 1 ?>">Précédent</a>
@@ -50,15 +54,13 @@
                             <?php endif; ?>
 
                             <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
-                                <li class="page-item <?= $i === $page ? 'active' : '' ?>">
-                                    <a class="page-link <?= $i === $page ? 'bg-warning text-dark' : 'bg-dark text-light' ?> rounded-pill" href="index.php?element=pages&action=Film&page=<?= $i ?>"><?= $i ?></a>
+                                    <li class="page-item <?= $i === $page ? 'active' : '' ?>"> <a class="page-link <?= $i === $page ? 'bg-warning text-dark' : 'bg-dark text-light' ?> rounded-pill" href="index.php?element=pages&action=Film&page=<?= $i ?>"><?= $i ?></a>
                                 </li>
                             <?php endfor; ?>
 
                             <?php if ($page < $totalPages - 2): ?>
                                 <?php if ($page < $totalPages - 3): ?>
-                                    <li class="page-item disabled">
-                                        <span class="page-link bg-dark text-light rounded-pill">...</span>
+                                        <li class="page-item disabled"> <span class="page-link bg-dark text-light rounded-pill">...</span>
                                     </li>
                                 <?php endif; ?>
                                 <li class="page-item">
@@ -89,3 +91,4 @@
         </div>
     </div>
 </div>
+
