@@ -14,7 +14,7 @@
                                 <div
                                     class="card h-100 bg-dark text-light border-secondary shadow-lg rounded">
                                     <!-- Vérification de l'existence de l'image du film, sinon image par défaut -->
-                                    <img src="<?= !empty($film['imageUrl']) ? $film['imageUrl'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg' ?>" class="card-img-top rounded" alt="Film poster">
+                                    <img src="<?= !empty($film['image_url']) ? $film['image_url'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg' ?>" class="card-img-top rounded" alt="Film poster">
                                     <div class="card-body">
                                         <h5 class="card-title text-warning"><?= htmlspecialchars($film['primaryTitle']) ?></h5>
                                         <p class="card-text small"><?= htmlspecialchars($film['startYear']) ?></p>

@@ -5,9 +5,8 @@ $apiKey = '51ca03d6'; // Votre clé API OMDb
 
 // Fonction pour récupérer l'URL du poster d'un film par son titre
 function getPosterUrl($title, $apiKey) {
-    //$url = "http://www.omdbapi.com/?t=" . urlencode($title) . "&apikey=" . $apiKey . "&r=json";
-    //$response = file_get_contents($url);
-    $response=false;
+    $url = "http://www.omdbapi.com/?t=" . urlencode($title) . "&apikey=" . $apiKey . "&r=json";
+    $response = file_get_contents($url);
     
     if ($response !== false) {
         $data = json_decode($response, true);
@@ -35,23 +34,19 @@ $totalPages = ceil($totalFilms / $filmsPerPage);
 foreach ($films as &$filmItem) {
 
     // Vérifier si le film a déjà une URL d'image
-    if (empty($filmItem['media_URL'])) {
+    if ($filmItem['image_url']==null) {
         // Si l'URL est vide, appeler l'API pour obtenir l'URL du poster
         $posterUrl = getPosterUrl($filmItem['primaryTitle'], $apiKey);
         
         // Mettre à jour la base de données avec l'URL du poster
-        if($filmItem['media_URL']==null || $filmItem['media_URL']='https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg'){
-        $film->addPosterUrl($filmItem['media_id'], $posterUrl);
+        if ($filmItem['image_url']==null && $posterUrl!='https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg'){
+            $film->addPosterUrl($filmItem['media_id'], $posterUrl);
         }
         
-        
         // Ajouter l'URL du poster à l'objet film pour l'affichage
-        $filmItem['imageUrl'] = $posterUrl;
-    } else {
-        // Si l'URL existe déjà, l'utiliser
-        $filmItem['imageUrl'] = $filmItem['media_URL'];
-        
+        $filmItem['image_url'] = $posterUrl;
     }
+
 }
 
 include 'views/films_list.php';
