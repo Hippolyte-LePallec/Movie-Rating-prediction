@@ -22,7 +22,7 @@ function getPosterUrl($title, $apiKey) {
 }
 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$filmsPerPage = 10; 
+$filmsPerPage = 15; 
 
 $film = new Film($db);
 $films = $film->fetchAll($page, $filmsPerPage);
