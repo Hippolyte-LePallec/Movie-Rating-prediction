@@ -13,24 +13,19 @@
 
     <!-- Contenu de la navbar -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Liens principaux -->
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link text-light" href="index.php">Accueil</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light" href="?page=films">Films</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light" href="?page=series">Séries</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light" href=".\pages\views\Statistiques.php">Statistiques</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light" href=".\pages\views\Maker.php">film maker</a>
-        </li>
-      </ul>
+    <?php
+    $list_menus = array(
+      'Film'=> 'Film',
+      'Series'=>'Series',
+      'Statistiques'=>'Statistiques',
+      'Maker' => 'Film maker',
+    );
+
+    foreach ($list_menus as $key => $menu): ?>
+      <div class="w3-dropdown-hover">
+        <a href="index.php?element=pages&action=<?= urlencode($key); ?>" class="w3-bar-item w3-button"><?= htmlspecialchars($menu); ?></a>
+      </div>
+    <?php endforeach; ?>
 
       <!-- Barre de recherche -->
       <form class="d-flex" role="search">
