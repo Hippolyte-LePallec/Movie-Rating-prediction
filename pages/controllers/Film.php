@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../../class/film.class.php');
 
-$apiKey = '51ca03d6'; // Votre clé API OMDb
+$apiKey = '12a20dd5'; // Votre clé API OMDb
 
 // Fonction pour récupérer l'URL du poster d'un film par son titre
 function getPosterUrl($title, $apiKey) {
