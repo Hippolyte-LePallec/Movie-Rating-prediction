@@ -7,7 +7,6 @@ import { userRouter } from './user/user.router'
 import { mediaRouter } from './media/media.router'
 import { genreRouter } from './genre/genre.router'
 import { ratingRouter } from './rating/rating.router'
-import { episodeRouter } from './episode/episode.router'
 import { categorieRouter } from './categorie/categorie.router'
 import { personneRouter } from './personne/personne.router'
 import { crewRouter } from './crew/crew.router'
@@ -27,7 +26,6 @@ app.use(userRouter)
 app.use(mediaRouter)
 app.use(genreRouter)
 app.use(ratingRouter)
-app.use(episodeRouter)
 app.use(categorieRouter)
 app.use(personneRouter)
 app.use(crewRouter)

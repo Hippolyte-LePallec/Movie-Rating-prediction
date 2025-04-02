@@ -3,155 +3,69 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Aka {
-  id_aka        Int      @id @default(autoincrement())
-  ordering      Int
-  title         String
-  region        String?
-  language      String?
-  types         String?
-  attributes    String?
-  isOriginalTitle Boolean @default(false)
-  media         Media    @relation(fields: [mediaId], references: [id_media])
-  mediaId       Int
+model categories {
+  cat_id   Int     @id
+  cat_name String?
 }
 
-model Rating {
-  id_rating      Int     @id @default(autoincrement())
-  averageRating  Float
-  numVotes       Int
-  media          Media?  @relation(fields: [mediaId], references: [id_media])
-  mediaId        Int?
+model crew {
+  media_id  String?
+  directors String?
+  writers   String?
+  crew_id   Int     @id
 }
 
-model Episode {
-  id_episode      Int     @id @default(autoincrement())
-  parentTconst    String?
-  seasonNumber    Int?
-  episodeNumber   Int?
-  media           Media?  @relation(fields: [mediaId], references: [id_media])
-  mediaId         Int?
+model genre {
+  genre_id   Int     @id
+  genre_name String?
 }
 
-model Media {
-  id_media        Int         @id @default(autoincrement())
-  titleType       String
-  primaryTitle    String
-  originalTitle   String?
-  isAdult         Boolean     @default(false)
-  startYear       Int?
-  endYear         Int?
-  runtimeMinutes  Int?
-  
-  // Relations
-  akas            Aka[]
-  ratings         Rating[]
-  episodes        Episode[]
-  categories      MediaCategorie[]
-  genres          MediaGenre[]
-  principals      Principal[]
-  connuPour       ConnuPour[]
+model media {
+  media_id       String        @id
+  primaryTitle   String?
+  isAdult        Int?
+  startYear      Int?
+  endYear        String?
+  runtimeMinutes String?
+  media_genre    media_genre[]
+  rating         rating[]
 }
 
-model Categorie {
-  id_categorie    Int              @id @default(autoincrement())
-  nom_categorie   String
-  medias          MediaCategorie[]
+model media_genre {
+  media_id String
+  genre_id Int
+  media    media  @relation(fields: [media_id], references: [media_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([media_id, genre_id])
 }
 
-model MediaCategorie {
-  media           Media      @relation(fields: [mediaId], references: [id_media])
-  mediaId         Int
-  categorie       Categorie  @relation(fields: [categorieId], references: [id_categorie])
-  categorieId     Int
-
-  @@id([mediaId, categorieId])
+model personne {
+  perso_id          String  @id
+  primaryName       String?
+  birthYear         String?
+  deathYear         String?
+  primaryProfession String?
 }
 
-model Genre {
-  id_genre        Int          @id @default(autoincrement())
-  nom_genre       String
-  medias          MediaGenre[]
+model principal {
+  media_id   String
+  ordering   Int
+  perso_id   String
+  cat_id     Int
+  job        String?
+  characters String?
+
+  @@id([media_id, ordering, perso_id, cat_id])
 }
 
-model MediaGenre {
-  media           Media      @relation(fields: [mediaId], references: [id_media])
-  mediaId         Int
-  genre           Genre      @relation(fields: [genreId], references: [id_genre])
-  genreId         Int
-
-  @@id([mediaId, genreId])
-}
-
-model Personne {
-  id_name          Int           @id @default(autoincrement())
-  primary_name     String
-  birth_year       Int?
-  death_year       Int?
-  profession       String?
-  
-  // Relations
-  principals       Principal[]
-  connuPour        ConnuPour[]
-  dirigeFilms      Directeur[]
-  ecrits           Ecrivain[]
-}
-
-model Principal {
-  ordering         Int
-  job              String?
-  characters       String?
-  
-  // Relations
-  media            Media       @relation(fields: [mediaId], references: [id_media])
-  mediaId          Int
-  personne         Personne    @relation(fields: [personneId], references: [id_name])
-  personneId       Int
-
-  @@id([mediaId, personneId])
-}
-
-model ConnuPour {
-  media            Media       @relation(fields: [mediaId], references: [id_media])
-  mediaId          Int
-  personne         Personne    @relation(fields: [personneId], references: [id_name])
-  personneId       Int
-
-  @@id([mediaId, personneId])
-}
-
-model Crew {
-  id_crew          Int          @id @default(autoincrement())
-  
-  // Relations - directeurs et écrivains
-  directeurs       Directeur[]
-  ecrivains        Ecrivain[]
-}
-
-model Directeur {
-  crew             Crew         @relation(fields: [crewId], references: [id_crew])
-  crewId           Int
-  personne         Personne     @relation(fields: [personneId], references: [id_name])
-  personneId       Int
-
-  @@id([crewId, personneId])
-}
-
-model Ecrivain {
-  crew             Crew         @relation(fields: [crewId], references: [id_crew])
-  crewId           Int
-  personne         Personne     @relation(fields: [personneId], references: [id_name])
-  personneId       Int
-
-  @@id([crewId, personneId])
-}
-
-model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
+model rating {
+  media_id      String?
+  averageRating Float?  @db.Real
+  numVotes      Int?
+  rating_id     Int     @id
+  media         media?  @relation(fields: [media_id], references: [media_id], onDelete: NoAction, onUpdate: NoAction)
 }
