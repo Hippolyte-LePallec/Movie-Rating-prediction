@@ -3,7 +3,7 @@ ob_start();
 session_start();
 include dirname(__FILE__) . "/inc/head.php";
 ?>
-<div class="maincontent  w3-display-container w3-center">
+<div class="maincontent d-flex justify-content-center align-items-center">
     <?php
         include dirname(__FILE__) . "/inc/content.php";
     ?>

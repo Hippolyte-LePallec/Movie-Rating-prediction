@@ -13,18 +13,22 @@
 
     <!-- Contenu de la navbar -->
     <div class="collapse navbar-collapse" id="navbarNav">
-    <?php
-    $list_menus = array(
-      'Film'=> 'Film',
-      'Statistiques'=>'Statistiques',
-      'Maker' => 'Film maker',
-    );
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <?php
+        $list_menus = array(
+          'Film' => 'Film',
+          'Statistiques' => 'Statistiques',
+          'Maker' => 'Film maker',
+        );
 
-    foreach ($list_menus as $key => $menu): ?>
-      <div class="w3-dropdown-hover">
-        <a href="index.php?element=pages&action=<?= urlencode($key); ?>" class="w3-bar-item w3-button"><?= htmlspecialchars($menu); ?></a>
-      </div>
-    <?php endforeach; ?>
+        foreach ($list_menus as $key => $menu): ?>
+          <li class="nav-item">
+            <a class="nav-link" href="index.php?element=pages&action=<?= urlencode($key); ?>">
+              <?= htmlspecialchars($menu); ?>
+            </a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
 
       <!-- Barre de recherche -->
       <form class="d-flex" role="search">

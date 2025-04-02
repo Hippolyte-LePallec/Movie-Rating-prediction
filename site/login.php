@@ -1,58 +1,100 @@
 <?php
 session_start();
 
-
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
 $db = require(dirname(__FILE__) . '/lib/mypdo.php');
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Cinéma Portal - Connexion</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="js/scripts.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style_login.css">
+    <link rel="stylesheet" href="css/cinema-theme-refined.css">
 </head>
-
 <body>
-    <div class="maincontent w3-display-container w3-center">
-        <div class="dtitle w3-container w3-teal">
-            <h1>Bienvenue sur le portail de votre projet !</h1>
-        </div>
-
-        <h1>Connexion</h1>
-        <form action="check_login.php" method="POST">
-            <div class="container">
-                <label for="username">Nom d'utilisateur :</label>
-                <input type="text" id="username" name="username" required>
-                <br>
-                <label for="password">Mot de passe :</label>
-                <input type="password" id="password" name="password" required>
-                <br>
-                <?php if (is_null($db)) { ?>
-                    <button type="submit" disabled>Impossible de Se connecter</button>
-                <?php } else { ?>
-                    <button type="submit">Se connecter</button>
-                <?php } ?>
+    <!-- Bordures film stylisées -->
+    <div class="film-edge film-edge-left"></div>
+    <div class="film-edge film-edge-right"></div>
+    
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-white">
+                <h1 class="h4">
+                    <i class="fas fa-film me-2"></i>
+                    Cinéma Portal
+                </h1>
+                <p class="tagline mb-0">L'accès privilégié à votre univers cinématographique</p>
             </div>
-        </form>
+            
+            <div class="card-body">
+                <h2 class="h5 mb-4">Connexion</h2>
+                
+                <form action="check_login.php" method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            <i class="fas fa-user-circle"></i>
+                            Nom d'utilisateur
+                        </label>
+                        <input type="text" id="username" name="username" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-key"></i>
+                            Mot de passe
+                        </label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    
+                    <div class="d-grid mt-4">
+                        <?php if (is_null($db)) { ?>
+                            <button type="submit" class="btn btn-secondary" disabled>
+                                <i class="fas fa-lock me-2"></i>Connexion indisponible
+                            </button>
+                        <?php } else { ?>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Connexion
+                            </button>
+                        <?php } ?>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <a href="#" class="text-muted">Mot de passe oublié?</a>
+                </div>
+                
+                <div class="stars-container">
+                    <i class="fas fa-star star"></i>
+                    <i class="fas fa-star star"></i>
+                    <i class="fas fa-star star"></i>
+                    <i class="fas fa-star star"></i>
+                    <i class="fas fa-star star"></i>
+                </div>
+            </div>
+        </div>
     </div>
-    <div style="clear:both;"></div>
-    <?php
+</body>
+</html>
+
+<?php
     if ($db) {
         $db = NULL;
     }
     if (is_array($_SESSION['mesgs']) && is_array($_SESSION['mesgs']['confirm'])) {
         foreach ($_SESSION['mesgs']['confirm'] as $mesg) {
     ?>
-            <div class="alertbox messagebox">
-                <span class="closebtn">&times;</span>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <?= $mesg; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php
         }
@@ -61,9 +103,9 @@ $db = require(dirname(__FILE__) . '/lib/mypdo.php');
     if (is_array($_SESSION['mesgs']) && is_array($_SESSION['mesgs']['errors'])) {
         foreach ($_SESSION['mesgs']['errors'] as $err) {
         ?>
-            <div class="alertbox errorbox">
-                <span class="closebtn">&times;</span>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <?= $err; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
     <?php
         }
@@ -71,39 +113,7 @@ $db = require(dirname(__FILE__) . '/lib/mypdo.php');
     }
     ?>
 
-    <script>
-        // Get all elements with class="closebtn"
-        var close = document.getElementsByClassName("closebtn");
-        var i;
-
-        // Loop through all close buttons
-        for (i = 0; i < close.length; i++) {
-            // When someone clicks on a close button
-            close[i].onclick = function() {
-
-                // Get the parent of <span class="closebtn"> (<div class="alert">)
-                var div = this.parentElement;
-
-                // Set the opacity of div to 0 (transparent)
-                div.style.opacity = "0";
-
-                // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
-                setTimeout(function() {
-                    div.style.display = "none";
-                }, 600);
-            }
-        }
-    </script>
-    <footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
-        <i class="fab fa-facebook w3-hover-opacity" aria-hidden="true"></i>
-        <i class="fab fa-instagram w3-hover-opacity" aria-hidden="true"></i>
-        <i class="fab fa-snapchat w3-hover-opacity" aria-hidden="true"></i>
-        <i class="fab fa-pinterest-p w3-hover-opacity" aria-hidden="true"></i>
-        <i class="fab fa-twitter w3-hover-opacity" aria-hidden="true"></i>
-        <i class="fab fa-linkedin w3-hover-opacity" aria-hidden="true"></i>
-        <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-    </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

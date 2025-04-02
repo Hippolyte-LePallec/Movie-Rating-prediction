@@ -1,0 +1,310 @@
+/* Style cinématographique élégant - version améliorée et centrée */
+
+:root {
+    --noir-profond: #121212;
+    --noir-gris: #1a1a1a;
+    --rouge-cinema: #b91c1c;
+    --or-elegant: #d4af37;
+    --texte-clair: #f8f8f8;
+    --accent-subtil: #444444;
+    --ombre-profonde: rgba(0, 0, 0, 0.85);
+  }
+  
+  body {
+    background-color: var(--noir-profond);
+    background-image: linear-gradient(to bottom, rgba(18, 18, 18, 0.95), rgba(10, 10, 10, 1));
+    color: var(--texte-clair);
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  /* Effet de vignette cinématographique */
+  body:before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.6) 100%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .container {
+    min-height: 100vh;
+    z-index: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card {
+    background-color: var(--noir-gris);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 15px 35px var(--ombre-profonde);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* Subtil effet de lueur */
+  .card:after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent 65%,
+      rgba(183, 28, 28, 0.05) 70%,
+      transparent 75%
+    );
+    animation: cardGlow 8s linear infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes cardGlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .card-header {
+    background: linear-gradient(to right, var(--noir-gris), var(--noir-profond));
+    border-bottom: 2px solid var(--rouge-cinema);
+    padding: 1.5rem 1rem;
+    position: relative;
+    text-align: center;
+  }
+  
+  .card-header:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--or-elegant), transparent);
+  }
+  
+  .card-header h1 {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--texte-clair);
+  }
+  
+  .card-header .tagline {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+  
+  .card-body {
+    padding: 2rem;
+    background: radial-gradient(circle at center, var(--noir-gris) 0%, var(--noir-profond) 100%);
+  }
+  
+  .card-body h2 {
+    color: var(--or-elegant);
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    position: relative;
+    text-align: center;
+  }
+  
+  .card-body h2:after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 2px;
+    background-color: var(--rouge-cinema);
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .form-label {
+    color: var(--texte-clair);
+    font-weight: 400;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .form-label i {
+    margin-right: 8px;
+    color: var(--or-elegant);
+  }
+  
+  .form-control {
+    background-color: rgba(30, 30, 30, 0.5);
+    border: 1px solid var(--accent-subtil);
+    color: var(--texte-clair);
+    padding: 0.8rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+  
+  .form-control:focus {
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
+    border-color: var(--rouge-cinema);
+    background-color: rgba(34, 34, 34, 0.7);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, var(--rouge-cinema), #7f1d1d);
+    border: none;
+    font-weight: 500;
+    letter-spacing: 1px;
+    padding: 0.8rem 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .btn-primary:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.1), 
+      transparent
+    );
+    transition: all 0.6s ease;
+  }
+  
+  .btn-primary:hover:before {
+    left: 100%;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(185, 28, 28, 0.3);
+  }
+  
+  .btn-secondary {
+    background-color: var(--accent-subtil);
+    border: none;
+    width: 100%;
+  }
+  
+  /* Élégants séparateurs latéraux de film */
+  .film-edge {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: 20px;
+    background-image: repeating-linear-gradient(
+      0deg,
+      var(--noir-profond) 0px,
+      var(--noir-profond) 4px,
+      var(--or-elegant) 4px,
+      var(--or-elegant) 6px,
+      var(--noir-profond) 6px,
+      var(--noir-profond) 12px
+    );
+    opacity: 0.4;
+    z-index: 0;
+  }
+  
+  .film-edge-left {
+    left: 20px;
+  }
+  
+  .film-edge-right {
+    right: 20px;
+  }
+  
+  /* Lien de récupération de mot de passe élégant */
+  .text-muted {
+    color: rgba(255, 255, 255, 0.5) !important;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+  }
+  
+  .text-muted:hover {
+    color: var(--or-elegant) !important;
+  }
+  
+  /* Étoiles décoratives stylisées */
+  .stars-container {
+    margin-top: 1.5rem;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .star {
+    color: var(--or-elegant);
+    font-size: 0.8rem;
+    margin: 0 3px;
+    opacity: 0.7;
+  }
+  
+  /* Style spécial pour le premier et dernier élément */
+  .star:first-child, .star:last-child {
+    font-size: 0.7rem;
+  }
+  
+  /* Animation subtile des étoiles */
+  @keyframes starTwinkle {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+  }
+  
+  .star:nth-child(1) { animation: starTwinkle 4s infinite 0s; }
+  .star:nth-child(2) { animation: starTwinkle 4s infinite 0.6s; }
+  .star:nth-child(3) { animation: starTwinkle 4s infinite 1.2s; }
+  .star:nth-child(4) { animation: starTwinkle 4s infinite 1.8s; }
+  .star:nth-child(5) { animation: starTwinkle 4s infinite 2.4s; }
+  
+  /* Ajuster l'alignement des éléments du formulaire */
+  form {
+    width: 100%;
+  }
+  
+  .form-group {
+    width: 100%;
+  }
+  
+  .text-center {
+    text-align: center;
+    width: 100%;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 767px) {
+    .card {
+      margin: 0 15px;
+    }
+    
+    .film-edge {
+      width: 10px;
+    }
+    
+    .film-edge-left {
+      left: 5px;
+    }
+    
+    .film-edge-right {
+      right: 5px;
+    }
+  }

@@ -1,15 +1,53 @@
+/* CSS principal avec thème cinématographique */
+
+:root {
+  --noir-profond: #0a0a0a;
+  --noir-gris: #161616;
+  --rouge-cinema: #b91c1c;
+  --or-elegant: #d4af37;
+  --texte-clair: #ffff00; /* Changer la couleur du texte en jaune */
+  --accent-subtil: #333333;
+  --ombre-profonde: rgba(0, 0, 0, 0.85);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--noir-profond);
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(10, 10, 10, 1));
+  color: var(--texte-clair);
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+}
+
+/* Effet de vignette cinématographique */
+body:before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 main {
-    flex: 1;
+  flex: 1;
 }
 
 .maincontent {
   padding-top: 30px;
+  flex: 1; /* Permet au contenu principal de prendre tout l'espace disponible */
 }
 
 /* Pour les menus déroulants en boutton, 
@@ -17,14 +55,37 @@ main {
 */
 .w3-bar .w3-button {
   margin-top: 0;
+  background-color: var(--noir-gris);
+  color: var(--texte-clair);
+  transition: all 0.3s ease;
 }
+
+.w3-bar .w3-button:hover {
+  background-color: var(--rouge-cinema);
+}
+
 .w3-bar .w3-dropdown-content {
   margin-top: 30px;
+  background-color: var(--noir-gris);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.w3-dropdown-content a {
+  color: var(--texte-clair);
+}
+
+.w3-dropdown-content a:hover {
+  background-color: var(--rouge-cinema);
+  color: var(--texte-clair);
 }
 
 /* Bordered form */
 form {
-  border: 3px solid #f1f1f1;
+  border: 3px solid var(--accent-subtil);
+  background-color: var(--noir-gris);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 /* Full-width inputs */
@@ -32,33 +93,85 @@ input[type="text"],
 input[type="password"] {
   width: 100%;
   padding: 12px 20px;
-  margin: 8px 0;
+  margin: 12px 0;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 1px solid var(--accent-subtil);
   box-sizing: border-box;
+  background-color: rgba(30, 30, 30, 0.5);
+  color: var(--texte-clair);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.2);
+  border-color: var(--rouge-cinema);
+  outline: none;
 }
 
 /* Set a style for all buttons */
 button {
-  background-color: #04aa6d;
+  background: linear-gradient(135deg, var(--rouge-cinema), #7f1d1d);
   color: white;
   padding: 14px 20px;
-  margin: 8px 0;
+  margin: 12px 0;
   border: none;
   cursor: pointer;
   width: 100%;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
+}
+
+/* Effet de brillance au survol */
+button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.15), 
+    transparent
+  );
+  transition: all 0.5s ease;
 }
 
 /* Add a hover effect for buttons */
 button:hover {
-  opacity: 0.8;
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(185, 28, 28, 0.4);
+  background: linear-gradient(135deg, #aa1818, #6b1818);
+}
+
+button:hover:before {
+  left: 100%;
+}
+
+button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(185, 28, 28, 0.4);
 }
 
 /* Extra style for the cancel button (red) */
 .cancelbtn {
   width: auto;
   padding: 10px 18px;
-  background-color: #f44336;
+  background-color: #333;
+  background-image: none;
+}
+
+.cancelbtn:hover {
+  background-color: #444;
 }
 
 /* Center the avatar image inside this container */
@@ -71,6 +184,8 @@ button:hover {
 img.avatar {
   width: 40%;
   border-radius: 50%;
+  border: 3px solid var(--or-elegant);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 /* Add padding to containers */
@@ -82,6 +197,12 @@ img.avatar {
 span.psw {
   float: right;
   padding-top: 16px;
+  color: var(--or-elegant);
+  transition: all 0.3s ease;
+}
+
+span.psw:hover {
+  color: var(--rouge-cinema);
 }
 
 /* Change styles for span and cancel button on extra small screens */
@@ -98,43 +219,60 @@ span.psw {
 /* Style the header with a grey background and some padding */
 .header {
   overflow: hidden;
-  background-color: #f1f1f1;
+  background: linear-gradient(to right, var(--noir-gris), var(--noir-profond));
   padding: 10px 10px;
+  border-bottom: 2px solid var(--rouge-cinema);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.header:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--or-elegant), transparent);
 }
 
 /* Style the header links */
 .header a {
   float: left;
-  color: black;
+  color: var(--texte-clair);
   text-align: center;
   padding: 12px;
   text-decoration: none;
   font-size: 14px;
   line-height: 20px;
   border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-/* Style the logo link (notice that we set the same value of line-height and font-size to prevent the header to increase when the font gets bigger */
+/* Style the logo link */
 .header a.logo {
   font-size: 14px;
   font-weight: bold;
+  color: var(--or-elegant);
 }
+
 .header a.logo:before {
   content: url("img/tux.png");
   position: relative;
   left: -3px;
   top: 10px;
+  filter: drop-shadow(0px 0px 3px var(--or-elegant));
 }
 
 /* Change the background color on mouse-over */
 .header a:hover {
-  background-color: #ddd;
-  color: black;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--or-elegant);
 }
 
 /* Style the active/current link*/
 .header a.active {
-  background-color: rgb(0, 0, 100);
+  background-color: var(--rouge-cinema);
   color: white;
 }
 
@@ -143,7 +281,7 @@ span.psw {
   float: right;
 }
 
-/* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */
+/* Add media queries for responsiveness */
 @media screen and (max-width: 500px) {
   .header a {
     float: none;
@@ -155,19 +293,40 @@ span.psw {
   }
 }
 
+/* Tables */
 table {
   width: 100%;
-  border: solid 1px darkgray;
+  border: solid 1px var(--accent-subtil);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 20px 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
+
 tr:nth-child(even) {
-  background: #ccc;
+  background: rgba(30, 30, 30, 0.7);
 }
+
 tr:nth-child(odd) {
-  background: #fff;
+  background: rgba(20, 20, 20, 0.7);
+}
+
+th {
+  background: linear-gradient(to right, var(--noir-gris), var(--noir-profond));
+  color: var(--or-elegant);
+  padding: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--rouge-cinema);
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(80, 80, 80, 0.2);
+  color: var(--texte-clair);
 }
 
 .quicksave {
-  color: rgb(0, 0, 100);
+  color: var(--or-elegant);
   font-weight: bold;
 }
 
@@ -181,13 +340,7 @@ tr:nth-child(odd) {
   text-align: right;
 }
 
-th.left {
-  text-align: center;
-}
-th.center {
-  text-align: center;
-}
-th.right {
+th.left, th.center, th.right {
   text-align: center;
 }
 
@@ -197,7 +350,6 @@ th.right {
 
 .medium {
   width: 150px;
-
 }
 
 .tdid {
@@ -210,6 +362,8 @@ th.right {
   margin-top: 5px;
   margin-bottom: 5px;
   text-align: left;
+  color: var(--or-elegant);
+  font-weight: 600;
 }
 
 .tabActions,
@@ -228,12 +382,23 @@ th.right {
 
 .tabActions input,
 .tabQuickActions input {
-  background-color: lightgray;
+  background-color: var(--noir-gris);
   border-style: double;
+  color: var(--texte-clair);
+  border-color: var(--accent-subtil);
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.tabActions input:hover,
+.tabQuickActions input:hover {
+  background-color: var(--accent-subtil);
+  border-color: var(--rouge-cinema);
 }
 
 .tabQuickActions input {
-  color: rgb(0, 0, 100);
+  color: var(--or-elegant);
   border-style: double;
 }
 
@@ -243,34 +408,40 @@ th.right {
   padding: 0 1%;
 }
 
+/* Alert boxes */
 .alertbox {
-  opacity: 0.8;
+  opacity: 0.9;
   border-radius: 10px;
-  background: lightblue;
-  transition: opacity 0.6s; /* 600ms to fade out */
+  background: rgba(30, 30, 30, 0.8);
+  transition: opacity 0.6s;
   position: fixed !important;
   text-align: center;
   min-width: 480px;
   width: auto;
   max-width: 1024px;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
+  padding: 15px !important;
   word-wrap: break-word;
-  top: 5px;
-  right: 5px;
+  top: 15px;
+  right: 15px;
   z-index: 100000;
   max-height: 270px;
   overflow-x: hidden;
   overflow-y: auto;
+  border-left: 4px solid var(--or-elegant);
+  color: var(--texte-clair);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .errorbox {
-  background: sandybrown;
+  background: rgba(50, 10, 10, 0.8);
+  border-left: 4px solid var(--rouge-cinema);
 }
 
 .messagebox {
-  background: lightgreen;
+  background: rgba(10, 30, 10, 0.8);
+  border-left: 4px solid #2d9d3a;
 }
+
 .clear {
   clear: both;
   margin: 5px;
@@ -279,72 +450,231 @@ th.right {
 .bAction {
   font: bold 11px Arial;
   text-decoration: none;
-  background-color: #eeeeee;
-  color: #333333;
-  padding: 2px 6px 2px 6px;
-  border-top: 1px solid #cccccc;
-  border-right: 1px solid #333333;
-  border-bottom: 1px solid #333333;
-  border-left: 1px solid #cccccc;
+  background-color: var(--noir-gris);
+  color: var(--texte-clair);
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--accent-subtil);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.bAction:hover {
+  background-color: var(--rouge-cinema);
+  color: white;
+  border-color: var(--rouge-cinema);
 }
 
 /* Navbar custom styles */
 .navbar {
-  box-shadow: 0 2px 5px rgba(2, 0, 141, 0.1);
+  background: linear-gradient(to right, var(--noir-gris), var(--noir-profond));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  border-bottom: 2px solid var(--rouge-cinema);
+  padding: 10px 20px;
+  color: var(--texte-clair);
+}
+
+.navbar:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--or-elegant), transparent);
 }
 
 .navbar-brand {
   font-size: 1.5rem;
   font-weight: bold;
+  color: var(--or-elegant) !important;
 }
 
 .navbar-nav .nav-link {
   padding: 0.5rem 1rem;
+  color: var(--texte-clair) !important;
+  transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--or-elegant) !important;
+}
+
+.navbar-nav .active > .nav-link {
+  color: var(--or-elegant) !important;
+  font-weight: bold;
 }
 
 .navbar .form-control {
   max-width: 300px;
+  background-color: rgba(30, 30, 30, 0.6);
+  border: 1px solid var(--accent-subtil);
+  color: var(--texte-clair);
+  border-radius: 6px;
+}
+
+.navbar .form-control:focus {
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.2);
+  border-color: var(--rouge-cinema);
+}
+
+.navbar .btn {
+  background: linear-gradient(135deg, var(--rouge-cinema), #7f1d1d);
+  border: none;
+  color: white;
+}
+
+.navbar .btn:hover {
+  background: linear-gradient(135deg, #aa1818, #6b1818);
 }
 
 /* Footer styles */
 .footer {
-  background-color: #080080;
-  color: #ffffff;
+  position: absolute; /* Change position to absolute */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #343a40; /* Couleur de fond du footer */
+  color: #fff;
+  background: linear-gradient(to right, #141414, #0a0a0a);
+  border-top: 2px solid var(--rouge-cinema);
+  padding: 30px 0;
+}
+
+.footer:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--or-elegant), transparent);
 }
 
 .footer a {
-  color: #adb5bd;
+  color: var(--or-elegant);
   text-decoration: none;
+  transition: all 0.3s ease;
 }
-·
+
 .footer a:hover {
-  color: #ffffff;
+  color: var(--rouge-cinema);
   text-decoration: underline;
 }
 
 /* Cards */
 .card {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--noir-gris);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+  background: linear-gradient(to right, var(--noir-gris), var(--noir-profond));
+  border-bottom: 2px solid var(--rouge-cinema);
+  color: var(--or-elegant);
+  font-weight: 600;
+  padding: 15px 20px;
+}
+
+.card-body {
+  padding: 20px;
+  background-color: rgba(25, 25, 25, 0.8);
 }
 
 .card-title {
   font-size: 1.1rem;
   font-weight: bold;
+  color: var(--or-elegant);
+  margin-bottom: 15px;
 }
 
 .card-text {
-  font-size: 0.9rem;
-  color: #6c757d;
+  font-size: 0.95rem;
+  color: var(--texte-clair);
+  line-height: 1.6;
 }
 
 .badge {
   font-size: 0.8rem;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: var(--rouge-cinema);
+  color: white;
+  font-weight: 500;
 }
 
 .d-flex {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* delete border */
   border: none;
 }
+
+/* Élégants séparateurs latéraux de film */
+.film-edge {
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 20px;
+  background-image: repeating-linear-gradient(
+    0deg,
+    var(--noir-profond) 0px,
+    var(--noir-profond) 4px,
+    var(--or-elegant) 4px,
+    var(--or-elegant) 6px,
+    var(--noir-profond) 6px,
+    var(--noir-profond) 12px
+  );
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.film-edge-left {
+  left: 15px;
+}
+
+.film-edge-right {
+  right: 15px;
+}
+
+/* Supprime l'affichage des bordures de film sur mobile */
+@media screen and (max-width: 768px) {
+  .film-edge {
+    display: none;
+  }
+}
+
+/* Animation d'étoiles décoratives pour des sections spéciales */
+.stars-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.star {
+  color: var(--or-elegant);
+  font-size: 0.9rem;
+  margin: 0 5px;
+  opacity: 0.7;
+}
+
+@keyframes starTwinkle {
+  0% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.4; transform: scale(1); }
+}
+
+.star:nth-child(1) { animation: starTwinkle 4s infinite 0s; }
+.star:nth-child(2) { animation: starTwinkle 4s infinite 0.6s; }
+.star:nth-child(3) { animation: starTwinkle 4s infinite 1.2s; }
+.star:nth-child(4) { animation: starTwinkle 4s infinite 1.8s; }
+.star:nth-child(5) { animation: starTwinkle 4s infinite 2.4s; }
