@@ -21,7 +21,7 @@ class Film {
             LEFT JOIN media_genre mg ON m.media_id = mg.media_id
             LEFT JOIN genre g ON mg.genre_id = g.genre_id
             GROUP BY m.media_id
-            ORDER BY m.primaryTitle ASC
+            ORDER BY m.\"primaryTitle\" ASC
             LIMIT :perPage OFFSET :offset
         ");
         
