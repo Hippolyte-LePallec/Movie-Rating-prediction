@@ -18,7 +18,6 @@ $db = require(dirname(__FILE__) . '/lib/mypdo.php');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style_login.css">
-    <link rel="stylesheet" href="css/cinema-theme-refined.css">
 </head>
 <body>
     <!-- Bordures film stylisées -->
