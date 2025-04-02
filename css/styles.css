@@ -88,6 +88,13 @@ form {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
+.form-label {
+  color: var(--or-elegant);
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+}
+
 /* Full-width inputs */
 input[type="text"],
 input[type="password"] {
@@ -507,7 +514,7 @@ th.left, th.center, th.right {
 
 .navbar .form-control {
   max-width: 300px;
-  background-color: rgba(30, 30, 30, 0.6);
+  background-color: rgba(100, 100, 100);
   border: 1px solid var(--accent-subtil);
   color: var(--texte-clair);
   border-radius: 6px;

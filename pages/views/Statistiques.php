@@ -24,7 +24,7 @@
                     <i class="fas fa-film fa-3x text-warning mb-3"></i>
                     <h5 class="card-title">Films</h5>
                     <p class="card-text display-4 text-warning">1,254</p>
-                    <p class="card-text text-muted">Depuis le début</p>
+                    <p class="card-text">Depuis le début</p>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                     <i class="fas fa-star fa-3x text-warning mb-3"></i>
                     <h5 class="card-title">Note moyenne</h5>
                     <p class="card-text display-4 text-warning">7.4</p>
-                    <p class="card-text text-muted">Sur 10 étoiles</p>
+                    <p class="card-text">Sur 10 étoiles</p>
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                     <i class="fas fa-user fa-3x text-warning mb-3"></i>
                     <h5 class="card-title">Réalisateurs</h5>
                     <p class="card-text display-4 text-warning">328</p>
-                    <p class="card-text text-muted">Différents</p>
+                    <p class="card-text">Différents</p>
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@
                     <i class="fas fa-eye fa-3x text-warning mb-3"></i>
                     <h5 class="card-title">Vues</h5>
                     <p class="card-text display-4 text-warning">4.2M</p>
-                    <p class="card-text text-muted">Ce mois-ci</p>
+                    <p class="card-text">Ce mois-ci</p>
                 </div>
             </div>
         </div>
