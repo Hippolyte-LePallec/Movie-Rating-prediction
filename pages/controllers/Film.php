@@ -40,9 +40,9 @@ foreach ($films as &$filmItem) {
         $posterUrl = getPosterUrl($filmItem['primaryTitle'], $apiKey);
         
         // Mettre à jour la base de données avec l'URL du poster
-        if($filmItem['media_URL']==null && $posterUrl='https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg'){
+        if($filmItem['media_URL']==null || $filmItem['media_URL']='https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg'){
         $film->addPosterUrl($filmItem['media_id'], $posterUrl);
-    }
+        }
         
         
         // Ajouter l'URL du poster à l'objet film pour l'affichage
