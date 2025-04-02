@@ -16,7 +16,6 @@
     <?php
     $list_menus = array(
       'Film'=> 'Film',
-      'Series'=>'Series',
       'Statistiques'=>'Statistiques',
       'Maker' => 'Film maker',
     );
