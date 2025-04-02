@@ -14,7 +14,7 @@
                                     <img src="/api/placeholder/185/278" class="card-img-top rounded" alt="Film poster">
                                     <div class="card-body">
                                         <h5 class="card-title text-warning"><?= htmlspecialchars($film['primaryTitle']) ?></h5>
-                                        <p class="card-text small text-muted"><?= htmlspecialchars($film['startYear']) ?></p>
+                                        <p class="card-text small"><?= htmlspecialchars($film['startYear']) ?></p>
 
                                         <p class="card-text">
                                             <strong>Genres:</strong>
