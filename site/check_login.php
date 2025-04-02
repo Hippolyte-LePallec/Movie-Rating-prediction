@@ -8,9 +8,9 @@ if (GETPOST('debug') == true) {
     ini_set('display_startup_errors', 1);
 }
 require_once(dirname(__FILE__) . '/class/myAuthClass.php');
-if (isset($_POST['connect'])) {
-    $uname = $_POST['uname'];
-    $psw = $_POST['psw'];
+if (isset($_POST['connect']) || isset($_POST['username']) || isset($_POST['uname'])) {
+    $uname = isset($_POST['uname']) ? $_POST['uname'] : $_POST['username'];
+    $psw = isset($_POST['psw']) ? $_POST['psw'] : (isset($_POST['pwd']) ? $_POST['pwd'] : $_POST['password']);
     $user = myAuthClass::authenticate($uname, $psw);
     if ($user["rowid"] > 0)
     {
@@ -23,3 +23,4 @@ if (isset($_POST['connect'])) {
     }
 }
 header('Location:index.php');
+?>
