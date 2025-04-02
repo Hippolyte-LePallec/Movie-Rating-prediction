@@ -160,7 +160,8 @@
     box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
     border-color: var(--rouge-cinema);
     background-color: rgba(34, 34, 34, 0.7);
-  }
+    color: var(--texte-clair); /* Ajoutez cette ligne pour forcer la couleur du texte */
+}
   
   .btn-primary {
     background: linear-gradient(135deg, var(--rouge-cinema), #7f1d1d);
