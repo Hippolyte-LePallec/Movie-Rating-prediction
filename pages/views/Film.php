@@ -20,9 +20,11 @@
                                         <h5 class="card-title text-warning text-center"><?= htmlspecialchars($film['primaryTitle']) ?></h5>
                                         <p class="card-text small"><?= htmlspecialchars($film['startYear']) ?></p>
 
-                                        <p class="card-text text-center">
-                                            <strong>Genres:</strong>
-                                            <span class="badge bg-secondary"><?= htmlspecialchars($film['genre_names']) ?></span>
+                                        <p class="card-text genres">
+                                            <strong>Genres:</strong><br>
+                                            <?php foreach (explode(', ', $film['genre_names']) as $genre): ?>
+                                                <span class="badge bg-secondary"><?= htmlspecialchars($genre) ?></span>
+                                            <?php endforeach; ?>
                                         </p>
 
                                         <div class="d-flex justify-content-center align-items-center">
