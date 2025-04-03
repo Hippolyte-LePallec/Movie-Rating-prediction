@@ -80,6 +80,7 @@ class Film {
     }
 
     public function getPosterAndPlot($id) {
+        
         $apiKeys = ['6d08fedf', '51ca03d6', '12a20dd5'];
         foreach ($apiKeys as $apiKey) {
             $url = "http://www.omdbapi.com/?i=" . urlencode($id) . "&apikey=" . $apiKey . "&r=json&plot=full";
@@ -95,12 +96,38 @@ class Film {
     
                 $posterUrl = isset($data['Poster']) && $data['Poster'] != 'N/A' ? $data['Poster'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg';
                 $plot = isset($data['Plot']) && $data['Plot'] != 'N/A' ? $data['Plot'] : 'Plot not available';
+                
                 return ['posterUrl' => $posterUrl, 'plot' => $plot];
             }
         }
         // Si toutes les clés échouent
         return ['posterUrl' => 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg', 'plot' => 'Plot not available'];
     }
+
+    public function getTopRatedFilms() {
+        // Appel à la procédure stockée pour récupérer les films les mieux notés
+        $stmt = $this->db->prepare("SELECT * FROM get_top_10_movies_by_vote_ratio()");
+        $stmt->execute();
+        $topRatedFilms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Retourner les films récupérés
+        return $topRatedFilms;
+    }
+
+    public function getWorstRatedFilms() {
+        $stmt = $this->db->prepare("
+            SELECT m.\"media_id\", r.\"averageRating\", r.\"numVotes\"
+            FROM rating r
+            JOIN media m ON r.media_id = m.media_id
+            WHERE r.\"averageRating\" <= 4
+            AND r.\"numVotes\" > 50000
+            ORDER BY r.\"averageRating\" ASC, r.\"numVotes\" DESC
+            LIMIT 10;
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     
 }
 ?>
