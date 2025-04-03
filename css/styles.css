@@ -613,6 +613,16 @@ th.left, th.center, th.right {
   margin-top: 10px;
 }
 
+.card-text.genres {
+  text-align: center; /* Centre les genres */
+  margin-top: 10px;
+}
+
+.card-text.genres .badge {
+  display: inline-block; /* Les genres restent alignés horizontalement */
+  margin: 5px 2px; /* Espacement entre les badges */
+}
+
 .badge {
   font-size: 0.8rem;
   padding: 5px 10px;
@@ -684,6 +694,7 @@ th.left, th.center, th.right {
   opacity: 0.7;
 
 }
+
 .fixed-size-image {
   width: 100%; /* Largeur de l'image égale à la carte */
   height: 300px; /* Hauteur fixe */
