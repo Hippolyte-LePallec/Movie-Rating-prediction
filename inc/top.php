@@ -1,9 +1,11 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
+  <div
+    class="container-fluid">
     <!-- Logo -->
     <a class="navbar-brand fw-bold text-warning" href="index.php">
-      <i class="fas fa-film"></i> Film & Style
+      <i class="fas fa-film"></i>
+      Film & Style
     </a>
 
     <!-- Bouton pour mobile -->
@@ -13,7 +15,8 @@
 
     <!-- Contenu de la navbar -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul
+        class="navbar-nav me-auto mb-2 mb-lg-0">
         <?php
         $list_menus = array(
           'Film' => 'Film',
@@ -23,29 +26,32 @@
 
         foreach ($list_menus as $key => $menu): ?>
           <li class="nav-item">
-            <a class="nav-link" href="index.php?element=pages&action=<?= urlencode($key); ?>">
-              <?= htmlspecialchars($menu); ?>
-            </a>
+            <a class="nav-link" href="index.php?element=pages&action=<?= urlencode($key); ?>"><?= htmlspecialchars($menu); ?></a>
           </li>
         <?php endforeach; ?>
       </ul>
 
       <!-- Barre de recherche -->
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Rechercher..." aria-label="Search">
-        <button class="btn btn-outline-light" type="submit">
-          <i class="fas fa-search"></i>
-        </button>
-      </form>
+      <!-- Barre de recherche -->
+<form class="d-flex" role="search" method="POST" action="index.php?element=pages&action=Film">
+    <input class="form-control me-2" type="search" name="titre" placeholder="Rechercher un film..." aria-label="Search">
+    <button class="btn btn-outline-light" type="submit">
+        <i class="fas fa-search"></i>
+    </button>
+</form>
+
+
 
       <!-- Connexion -->
       <ul class="navbar-nav ms-3">
         <li class="nav-item">
           <a class="nav-link text-light" href="#" data-bs-toggle="modal" data-bs-target="#connexionModal">
-            <i class="fas fa-sign-in-alt"></i> Connexion
+            <i class="fas fa-sign-in-alt"></i>
+            Connexion
           </a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+

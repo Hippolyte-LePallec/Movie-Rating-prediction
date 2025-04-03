@@ -14,7 +14,7 @@
 
     <!-- Cartes de statistiques rapides -->
     <div class="row mb-3">
-        <div class="col-md-4 mb-3"> <!-- Changer la taille de la colonne pour occuper 1/3 -->
+        <div class="col-md-4 mb-3"> 
             <div class="card bg-dark text-light border-secondary h-100">
                 <div class="card-body text-center">
                     <i class="fas fa-film fa-3x text-warning mb-3"></i>
@@ -25,7 +25,7 @@
             </div>
         </div>
         
-        <div class="col-md-4 mb-3"> <!-- Changer la taille de la colonne pour occuper 1/3 -->
+        <div class="col-md-4 mb-3"> 
             <div class="card bg-dark text-light border-secondary h-100">
                 <div class="card-body text-center">
                     <i class="fas fa-star fa-3x text-warning mb-3"></i>
@@ -36,7 +36,7 @@
             </div>
         </div>
         
-        <div class="col-md-4 mb-3"> <!-- Changer la taille de la colonne pour occuper 1/3 -->
+        <div class="col-md-4 mb-3"> 
             <div class="card bg-dark text-light border-secondary h-100">
                 <div class="card-body text-center">
                     <i class="fas fa-user fa-3x text-warning mb-3"></i>
@@ -51,7 +51,7 @@
     <!-- Graphiques détaillés -->
     <div class="row">
         <!-- Répartition par genre -->
-        <div class="col-md-12 mb-4"> <!-- Ajout de col-md-12 pour que le graphique prenne toute la largeur -->
+        <div class="col-md-12 mb-4"> 
             <div class="card bg-dark text-light border-secondary h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 text-warning"><i class="fas fa-chart-pie me-2"></i>Répartition par Genre</h5>
@@ -67,7 +67,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // Données pour le graphique de répartition par genre
+
     const genreData = {
         labels: <?= json_encode(array_column($genreDistribution, 'genre_name')) ?>,
         datasets: [{
@@ -77,7 +77,7 @@
         }]
     };
 
-    // Configuration du graphique de répartition par genre
+
     const genreConfig = {
         type: 'pie',
         data: genreData,
@@ -98,7 +98,7 @@
         }
     };
 
-    // Créer le graphique de répartition par genre
+
     const genreChart = new Chart(document.getElementById('chart-genres'), genreConfig);
 
 </script>
