@@ -1,6 +1,5 @@
 <?php
 require_once(dirname(__FILE__) . '/../../class/film.class.php');
-require_once(dirname(__FILE__) . '/../../class/note.class.php');
 
 // Paramètres de pagination
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;

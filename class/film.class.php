@@ -20,6 +20,7 @@ class Film {
             FROM media m
             LEFT JOIN media_genre mg ON m.media_id = mg.media_id
             LEFT JOIN genre g ON mg.genre_id = g.genre_id
+            LEFT JOIN rating r ON m.media_id = r.media_id
             GROUP BY m.media_id
             ORDER BY m.\"primaryTitle\" ASC
             LIMIT :perPage OFFSET :offset
@@ -70,6 +71,7 @@ class Film {
                                     FROM media AS m 
                                     LEFT JOIN media_genre AS mg ON m.media_id = mg.media_id 
                                     LEFT JOIN genre AS g ON mg.genre_id = g.genre_id 
+                                    LEFT JOIN rating r ON m.media_id = r.media_id
                                     WHERE m.media_id = :media_id 
                                     GROUP BY m.media_id");
     
