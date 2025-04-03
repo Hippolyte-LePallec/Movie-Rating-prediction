@@ -34,10 +34,6 @@ foreach ($films as &$filmItem) {
         $filmItem['image_url'] = $posterUrl;
         $filmItem['plot'] = $plot;
     }
-
-    // Récupérer le averageRating pour le film
-    $ratingData = $note->calculateAverageRating($filmItem['media_id']);
-    $filmItem['averageRating'] = $ratingData['avgRating'] ?? 'N/A';
 }
 
 // Inclure la vue d'affichage
