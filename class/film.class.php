@@ -64,6 +64,43 @@ class Film {
             throw new Exception("Erreur lors de l'exécution de la procédure : " . $errorInfo[2]);
         }
     }
+
+    public function getFilmById($media_id) {
+        $stmt = $this->db->prepare("SELECT m.*, string_agg(g.genre_name, ', ') AS genre_names 
+                                    FROM media AS m 
+                                    LEFT JOIN media_genre AS mg ON m.media_id = mg.media_id 
+                                    LEFT JOIN genre AS g ON mg.genre_id = g.genre_id 
+                                    WHERE m.media_id = :media_id 
+                                    GROUP BY m.media_id");
+    
+        $stmt->bindParam(':media_id', $media_id, PDO::PARAM_STR);
+        $stmt->execute();
+    
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    public function getPosterAndPlot($id) {
+        $apiKeys = ['6d08fedf', '51ca03d6', '12a20dd5'];
+        foreach ($apiKeys as $apiKey) {
+            $url = "http://www.omdbapi.com/?i=" . urlencode($id) . "&apikey=" . $apiKey . "&r=json&plot=full";
+            $response = file_get_contents($url);
+    
+            if ($response !== false) {
+                $data = json_decode($response, true);
+                
+                // Vérifier si la réponse est correcte ou si la limite de requêtes est atteinte
+                if (isset($data['Response']) && $data['Response'] === 'False' && strpos($data['Error'], 'limit') !== false) {
+                    continue; // Passer à la clé suivante
+                }
+    
+                $posterUrl = isset($data['Poster']) && $data['Poster'] != 'N/A' ? $data['Poster'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg';
+                $plot = isset($data['Plot']) && $data['Plot'] != 'N/A' ? $data['Plot'] : 'Plot not available';
+                return ['posterUrl' => $posterUrl, 'plot' => $plot];
+            }
+        }
+        // Si toutes les clés échouent
+        return ['posterUrl' => 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg', 'plot' => 'Plot not available'];
+    }
     
 }
 ?>
