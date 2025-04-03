@@ -25,7 +25,7 @@
                                         </p>
 
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <span class="badge bg-warning text-dark">★</span>
+                                            <span class="badge bg-warning text-dark">★ <?= htmlspecialchars($film['averageRating']) ?></span>
                                         </div>
                                     </div>
                                 </div>
