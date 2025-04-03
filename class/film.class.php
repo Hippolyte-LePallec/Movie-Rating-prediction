@@ -149,10 +149,10 @@ class Film
 {
     $offset = ($page - 1) * $perPage;
 
-    // Si un terme de recherche est donné, filtrer par le titre du film
+
     $searchCondition = '';
     if (!empty($searchTerm)) {
-        $searchCondition = "WHERE m.\"primaryTitle\" ILIKE :searchTerm";  // Utilisation de guillemets pour respecter la casse
+        $searchCondition = "WHERE m.\"primaryTitle\" ILIKE :searchTerm";  
     }
 
     $stmt = $this->db->prepare("
@@ -172,7 +172,7 @@ class Film
     ");
 
     if (!empty($searchTerm)) {
-        $searchTerm = "%" . $searchTerm . "%";  // Ajout des jokers pour la recherche partielle
+        $searchTerm = "%" . $searchTerm . "%"; 
         $stmt->bindParam(':searchTerm', $searchTerm, PDO::PARAM_STR);
     }
 
