@@ -21,7 +21,7 @@
 
                                         <p class="card-text">
                                             <strong>Genres:</strong>
-                                            <span class="badge bg-secondary"><?= htmlspecialchars($film['genre_names']) ?></span>
+                                            <?php var_dump($film['averageRating']); ?>
                                         </p>
 
                                         <div class="d-flex justify-content-between align-items-center">
