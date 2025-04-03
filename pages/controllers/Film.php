@@ -1,10 +1,13 @@
 <?php
 require_once(dirname(__FILE__) . '/../../class/film.class.php');
+require_once(dirname(__FILE__) . '/../../class/note.class.php');
 
 // Paramètres de pagination
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $filmsPerPage = 15;
 
+$note = new note($db);
+$notes = $note->getRatingById();
 $film = new Film($db);
 $films = $film->fetchAll($page, $filmsPerPage);
 $totalFilms = $film->getTotalCount();
@@ -31,6 +34,10 @@ foreach ($films as &$filmItem) {
         $filmItem['image_url'] = $posterUrl;
         $filmItem['plot'] = $plot;
     }
+
+    // Récupérer le averageRating pour le film
+    $ratingData = $note->calculateAverageRating($filmItem['media_id']);
+    $filmItem['averageRating'] = $ratingData['avgRating'] ?? 'N/A';
 }
 
 // Inclure la vue d'affichage
