@@ -6,8 +6,6 @@ require_once(dirname(__FILE__) . '/../../class/note.class.php');
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $filmsPerPage = 15;
 
-$note = new note($db);
-$notes = $note->getRatingById();
 $film = new Film($db);
 $films = $film->fetchAll($page, $filmsPerPage);
 $totalFilms = $film->getTotalCount();
