@@ -1,155 +1,100 @@
 <?php
-// Ne pas inclure les en-têtes ici car ils sont déjà inclus dans inc/content.php
+require_once __DIR__ . '/../../class/maker.class.php';
+
+// Au début du fichier, après les includes
+$maker = new Maker($db);
+$genres = $maker->getGenres();
 ?>
 
 <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card bg-dark text-light border-secondary">
+        <div class="col-md-8">
+            <div class="card bg-dark text-light">
                 <div class="card-header">
-                    <h2 class="text-warning mb-0">Ajouter un nouveau film</h2>
+                    <h3 class="text-warning mb-0">Ajouter un média</h3>
                 </div>
                 <div class="card-body">
-                    <form action="<?= $_SERVER['PHP_SELF'] . "?element=films&action=add" ?>" method="post" class="needs-validation" novalidate>
-                        <input type="hidden" name="film_id">
-                        
-                        <!-- Informations générales -->
-                        <div class="card mb-4 bg-dark border-secondary">
-                            <div class="card-header">
-                                <h5 class="text-warning mb-0"><i class="fas fa-film me-2"></i>Informations générales</h5>
+                    <form action="<?= $_SERVER['PHP_SELF'] ?>?element=media&action=add" method="post" class="needs-validation" novalidate>
+                        <!-- Informations de base -->
+                        <div class="mb-3">
+                            <label for="primaryTitle" class="form-label">Titre <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control bg-dark text-light" id="primaryTitle" name="primaryTitle" required>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="startYear" class="form-label">Année <span class="text-danger">*</span></label>
+                                <select class="form-select bg-dark text-light" id="startYear" name="startYear" required>
+                                    <option value="">Sélectionner...</option>
+                                    <?php for($i = date('Y'); $i >= 1900; $i--): ?>
+                                        <option value="<?= $i ?>"><?= $i ?></option>
+                                    <?php endfor; ?>
+                                </select>
                             </div>
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="titre" class="form-label">Titre <span class="text-danger">*</span></label>
-                                        <input class="form-control bg-dark text-light border-secondary" type="text" id="titre" name="titre" required>
-                                        <div class="invalid-feedback">
-                                            Veuillez saisir un titre.
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="titre_original" class="form-label">Titre original</label>
-                                        <input class="form-control bg-dark text-light border-secondary" type="text" id="titre_original" name="titre_original">
-                                    </div>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="realisateur" class="form-label">Réalisateur <span class="text-danger">*</span></label>
-                                        <input class="form-control bg-dark text-light border-secondary" type="text" id="realisateur" name="realisateur" required>
-                                        <div class="invalid-feedback">
-                                            Veuillez saisir un réalisateur.
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="date_sortie" class="form-label">Année de sortie <span class="text-danger">*</span></label>
-                                        <select class="form-select bg-dark text-light border-secondary" id="date_sortie" name="date_sortie" required>
-                                            <option value="" selected disabled>Sélectionner...</option>
-                                            <?php for($i = date('Y'); $i >= 1900; $i--): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                            <?php endfor; ?>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            Veuillez sélectionner une année.
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="duree" class="form-label">Durée (min) <span class="text-danger">*</span></label>
-                                        <input class="form-control bg-dark text-light border-secondary" type="number" id="duree" name="duree" min="1" max="999" required>
-                                        <div class="invalid-feedback">
-                                            Veuillez saisir une durée valide.
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="genre" class="form-label">Genre(s) <span class="text-danger">*</span></label>
-                                        <select class="form-select bg-dark text-light border-secondary" id="genre" name="genre[]" multiple required>
-                                            <option value="action">Action</option>
-                                            <option value="aventure">Aventure</option>
-                                            <option value="animation">Animation</option>
-                                            <option value="biographie">Biographie</option>
-                                            <option value="comedie">Comédie</option>
-                                            <option value="crime">Crime</option>
-                                            <option value="documentaire">Documentaire</option>
-                                            <option value="drame">Drame</option>
-                                            <option value="famille">Famille</option>
-                                            <option value="fantastique">Fantastique</option>
-                                            <option value="histoire">Histoire</option>
-                                            <option value="horreur">Horreur</option>
-                                            <option value="musique">Musique</option>
-                                            <option value="mystere">Mystère</option>
-                                            <option value="romance">Romance</option>
-                                            <option value="sciencefiction">Science-Fiction</option>
-                                            <option value="thriller">Thriller</option>
-                                            <option value="guerre">Guerre</option>
-                                            <option value="western">Western</option>
-                                        </select>
-                                        <div class="form-text text-muted">
-                                            Maintenez Ctrl (ou Cmd) pour sélectionner plusieurs genres.
-                                        </div>
-                                        <div class="invalid-feedback">
-                                            Veuillez sélectionner au moins un genre.
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="pays" class="form-label">Pays de production</label>
-                                        <input class="form-control bg-dark text-light border-secondary" type="text" id="pays" name="pays">
-                                    </div>
-                                </div>
+                            <div class="col-md-4">
+                                <label for="runtimeMinutes" class="form-label">Durée (min) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control bg-dark text-light" id="runtimeMinutes" name="runtimeMinutes" min="1" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="isAdult" class="form-label">Contenu adulte</label>
+                                <select class="form-control bg-dark text-light" id="isAdult" name="isAdult">
+                                    <option value="0">Non</option>
+                                    <option value="1">Oui</option>
+                                </select>
                             </div>
                         </div>
-                        
-                        <!-- Synopsis et détails -->
-                        <div class="card mb-4 bg-dark border-secondary">
-                            <div class="card-header">
-                                <h5 class="text-warning mb-0"><i class="fas fa-align-left me-2"></i>Synopsis et détails</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="synopsis" class="form-label">Synopsis <span class="text-danger">*</span></label>
-                                    <textarea class="form-control bg-dark text-light border-secondary" id="synopsis" name="synopsis" rows="5" required></textarea>
-                                    <div class="invalid-feedback">
-                                        Veuillez saisir un synopsis.
+
+                        <!-- Genres -->
+                        <div class="mb-3">
+                            <label class="form-label">Genres <span class="text-danger">*</span></label>
+                            <div class="row">
+                                <?php foreach($genres as $genre): ?>
+                                    <div class="col-md-3 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="genres[]" value="<?= $genre['id'] ?>" id="genre<?= $genre['id'] ?>">
+                                            <label class="form-check-label text-light" for="genre<?= $genre['id'] ?>">
+                                                <?= htmlspecialchars($genre['name']) ?>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="casting" class="form-label">Acteurs principaux</label>
-                                    <textarea class="form-control bg-dark text-light border-secondary" id="casting" name="casting" rows="3" placeholder="Un acteur par ligne"></textarea>
-                                </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-                        
-                        <!-- Médias -->
-                        <div class="card mb-4 bg-dark border-secondary">
-                            <div class="card-header">
-                                <h5 class="text-warning mb-0"><i class="fas fa-image me-2"></i>Médias</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="affiche" class="form-label">URL de l'affiche</label>
-                                    <input class="form-control bg-dark text-light border-secondary" type="url" id="affiche" name="affiche">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="trailer" class="form-label">URL de la bande-annonce (YouTube)</label>
-                                    <input class="form-control bg-dark text-light border-secondary" type="url" id="trailer" name="trailer" placeholder="https://www.youtube.com/watch?v=...">
-                                </div>
-                            </div>
+
+                        <!-- Réalisateur -->
+                        <div class="mb-3">
+                            <label for="director" class="form-label">Réalisateur <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control bg-dark text-light" id="director" name="director" required>
+                            <input type="hidden" name="director_id" id="director_id">
                         </div>
-                        
+
+                        <!-- Scénariste -->
+                        <div class="mb-3">
+                            <label for="writer" class="form-label">Scénariste <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control bg-dark text-light" id="writer" name="writer" required>
+                            <input type="hidden" name="writer_id" id="writer_id">
+                        </div>
+
+                        <!-- Acteur principal -->
+                        <div class="mb-3">
+                            <label for="actor" class="form-label">Acteur principal <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control bg-dark text-light" id="actor" name="actor" required>
+                            <input type="hidden" name="actor_id" id="actor_id">
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control bg-dark text-light" id="description" name="description" rows="3"></textarea>
+                        </div>
+
+                        <!-- Boutons -->
                         <div class="row mt-4">
                             <div class="col-md-6">
-                                <a href="?element=pages&action=Film" class="btn btn-secondary w-100">
-                                    <i class="fas fa-arrow-left me-2"></i>Annuler
-                                </a>
+                                <a href="?element=media&action=list" class="btn btn-secondary w-100">Annuler</a>
                             </div>
                             <div class="col-md-6">
-                                <button type="submit" name="confirm" class="btn btn-warning w-100">
-                                    <i class="fas fa-save me-2"></i>Enregistrer le film
-                                </button>
+                                <button type="submit" class="btn btn-warning w-100">Enregistrer</button>
                             </div>
                         </div>
                     </form>
@@ -160,18 +105,68 @@
 </div>
 
 <script>
-// Script pour activer la validation des formulaires Bootstrap
-(function() {
-  'use strict';
-  var forms = document.querySelectorAll('.needs-validation');
-  Array.prototype.slice.call(forms).forEach(function(form) {
-    form.addEventListener('submit', function(event) {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      form.classList.add('was-validated');
-    }, false);
-  });
-})();
+$(document).ready(function() {
+    // Configuration de l'autocomplétion
+    function setupAutocomplete(inputId, type) {
+        $(inputId).autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: 'ajax/search_persons.php',
+                    dataType: 'json',
+                    data: { term: request.term, type: type },
+                    success: function(data) {
+                        response(data.map(function(item) {
+                            return {
+                                label: item.name,
+                                value: item.id
+                            };
+                        }));
+                    }
+                });
+            },
+            minLength: 1,
+            select: function(event, ui) {
+                event.preventDefault();
+                $(this).val(ui.item.label);
+                $(this).siblings('input[type="hidden"]').val(ui.item.value);
+            }
+        });
+    }
+
+    // Initialisation des autocompletions
+    setupAutocomplete('#director', 'director');
+    setupAutocomplete('#writer', 'writer');
+    setupAutocomplete('#actor', 'actor');
+
+    // Validation du formulaire
+    $('form').on('submit', function(e) {
+        if (!$('input[name="genres[]"]:checked').length) {
+            e.preventDefault();
+            alert('Veuillez sélectionner au moins un genre');
+        }
+    });
+});
 </script>
+
+<style>
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #343a40;
+    border: 1px solid #495057;
+}
+
+.ui-menu-item {
+    padding: 5px 10px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.ui-menu-item:hover {
+    background-color: #495057;
+}
+
+.form-check-input:checked + .form-check-label {
+    color: #ffc107;
+}
+</style>
