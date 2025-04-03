@@ -79,6 +79,7 @@ foreach ($topRatedFilms as $topfilm) {
 
 $worstRatedFilms = $film->getWorstRatedFilms();
 foreach ($worstRatedFilms as $filmItem) {
+
     $filmDetails = $film->getFilmById($filmItem['media_id']);
 
     if ($filmDetails['image_url'] != null) {
@@ -96,7 +97,8 @@ foreach ($worstRatedFilms as $filmItem) {
         $worstRatedFilmsList[] = [
             'media_id' => $filmItem['media_id'],
             'image_url' => $filmData['posterUrl'],
-            'plot' => $filmData['plot']
+            'plot' => $filmData['plot'],
+            'averageRating'=>$filmItem['averageRating']
         ];
     }
 }
