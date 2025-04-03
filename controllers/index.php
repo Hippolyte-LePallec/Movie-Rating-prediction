@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__) . '/../class/film.class.php');
 
 // Liste des films en vedette
-$featuredFilmIds = ['tt0358082', 'tt1417299', 'tt0312004', 'tt0121766', 'tt15846788'];
+$featuredFilmIds = ['tt0358082', 'tt1417299', 'tt0312004', 'tt0121766', 'tt1000000014'];
 
 $film = new Film($db);
 
