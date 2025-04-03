@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__) . '/../class/film.class.php');
 
 
-$featuredFilmIds = ['tt0358082', 'tt1014672', 'tt0312004', 'tt15391004', 'tt15846788'];
+$featuredFilmIds = ['tt0358082', 'tt1014672', 'tt0312004', 'tt0121766', 'tt15846788'];
 
 
 $film = new Film($db);
