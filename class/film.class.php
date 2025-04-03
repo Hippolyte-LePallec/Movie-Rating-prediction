@@ -15,13 +15,16 @@ class Film {
         $offset = ($page - 1) * $perPage;
     
         $stmt = $this->db->prepare("
-            SELECT m.*, 
-                   string_agg(g.genre_name, ', ') AS genre_names
+            SELECT
+                m.*,
+                string_agg(g.genre_name, ', ') AS genre_names,
+                r.\"averageRating\",
+                r.\"numVotes\"
             FROM media m
             LEFT JOIN media_genre mg ON m.media_id = mg.media_id
             LEFT JOIN genre g ON mg.genre_id = g.genre_id
             LEFT JOIN rating r ON m.media_id = r.media_id
-            GROUP BY m.media_id
+            GROUP BY m.media_id, r.\"averageRating\", r.\"numVotes\"
             ORDER BY m.\"primaryTitle\" ASC
             LIMIT :perPage OFFSET :offset
         ");
