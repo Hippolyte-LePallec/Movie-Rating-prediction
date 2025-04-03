@@ -5,8 +5,9 @@ $apiKey = '12a20dd5'; // Votre clé API OMDb
 
 // Fonction pour récupérer l'URL du poster d'un film par son titre
 function getPosterUrl($title, $apiKey) {
-    $url = "http://www.omdbapi.com/?t=" . urlencode($title) . "&apikey=" . $apiKey . "&r=json";
-    $response = file_get_contents($url);
+    //$url = "http://www.omdbapi.com/?t=" . urlencode($title) . "&apikey=" . $apiKey . "&r=json";
+    //$response = file_get_contents($url);
+    $response = false;
     
     if ($response !== false) {
         $data = json_decode($response, true);
