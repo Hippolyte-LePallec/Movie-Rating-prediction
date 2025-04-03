@@ -5,9 +5,15 @@ require_once(dirname(__FILE__) . '/../../class/film.class.php');
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $filmsPerPage = 15;
 
+// Paramètre de recherche
+$searchTerm = isset($_POST['titre']) ? $_POST['titre'] : '';  // Récupération via POST
+
+// Instancier la classe Film
 $film = new Film($db);
-$films = $film->fetchAll($page, $filmsPerPage);
-$totalFilms = $film->getTotalCount();
+
+// Récupérer les films filtrés par recherche
+$films = $film->fetchFilmsBySearch($searchTerm, $page, $filmsPerPage);
+$totalFilms = $film->getTotalCountBySearch($searchTerm);
 $totalPages = ceil($totalFilms / $filmsPerPage);
 
 // Vérification et ajout du poster si nécessaire

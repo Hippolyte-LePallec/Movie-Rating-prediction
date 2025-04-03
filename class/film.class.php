@@ -103,9 +103,9 @@ class Film
             if ($response !== false) {
                 $data = json_decode($response, true);
 
-                // Vérifier si la réponse est correcte ou si la limite de requêtes est atteinte
+                
                 if (isset($data['Response']) && $data['Response'] === 'False' && strpos($data['Error'], 'limit') !== false) {
-                    continue; // Passer à la clé suivante
+                    continue; 
                 }
 
                 $posterUrl = isset($data['Poster']) && $data['Poster'] != 'N/A' ? $data['Poster'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg';
@@ -114,18 +114,18 @@ class Film
                 return ['posterUrl' => $posterUrl, 'plot' => $plot];
             }
         }
-        // Si toutes les clés échouent
+
         return ['posterUrl' => 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg', 'plot' => 'Plot not available'];
     }
 
     public function getTopRatedFilms()
     {
-        // Appel à la procédure stockée pour récupérer les films les mieux notés
+        
         $stmt = $this->db->prepare("SELECT * FROM get_top_10_movies_by_vote_ratio()");
         $stmt->execute();
         $topRatedFilms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Retourner les films récupérés
+
         return $topRatedFilms;
     }
 
@@ -143,6 +143,69 @@ class Film
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+    public function fetchFilmsBySearch($searchTerm, $page = 1, $perPage = 10)
+{
+    $offset = ($page - 1) * $perPage;
+
+    // Si un terme de recherche est donné, filtrer par le titre du film
+    $searchCondition = '';
+    if (!empty($searchTerm)) {
+        $searchCondition = "WHERE m.\"primaryTitle\" ILIKE :searchTerm";  // Utilisation de guillemets pour respecter la casse
+    }
+
+    $stmt = $this->db->prepare("
+        SELECT
+            m.*,
+            string_agg(g.genre_name, ', ') AS genre_names,
+            r.\"averageRating\",
+            r.\"numVotes\"
+        FROM media m
+        LEFT JOIN media_genre mg ON m.media_id = mg.media_id
+        LEFT JOIN genre g ON mg.genre_id = g.genre_id
+        LEFT JOIN rating r ON m.media_id = r.media_id
+        $searchCondition
+        GROUP BY m.media_id, r.\"averageRating\", r.\"numVotes\"
+        ORDER BY m.\"primaryTitle\" ASC
+        LIMIT :perPage OFFSET :offset
+    ");
+
+    if (!empty($searchTerm)) {
+        $searchTerm = "%" . $searchTerm . "%";  // Ajout des jokers pour la recherche partielle
+        $stmt->bindParam(':searchTerm', $searchTerm, PDO::PARAM_STR);
+    }
+
+    $stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
+    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+public function getTotalCountBySearch($searchTerm)
+{
+    // Si un terme de recherche est donné, filtrer par le titre du film
+    $searchCondition = '';
+    if (!empty($searchTerm)) {
+        $searchCondition = "WHERE m.\"primaryTitle\" ILIKE :searchTerm";  // Utilisation de ILIKE pour une recherche insensible à la casse
+    }
+
+    $stmt = $this->db->prepare("
+        SELECT COUNT(*) 
+        FROM media m
+        $searchCondition
+    ");
+
+    if (!empty($searchTerm)) {
+        $searchTerm = "%" . $searchTerm . "%";  // Ajout des jokers pour la recherche partielle
+        $stmt->bindParam(':searchTerm', $searchTerm, PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchColumn();
+}
 
 
 
