@@ -12,8 +12,8 @@
                         <?php foreach ($films as $film): ?>
                             <div class="col">
                                 <div
-                                    class="card h-100 bg-dark text-light border-secondary shadow-lg rounded">
-                                    <!-- Vérification de l'existence de l'image du film, sinon image par défaut -->
+                                    class="card h-100 bg-dark text-light border-secondary shadow-lg rounded cursor-pointer" onclick="window.location.href='./index.php?element=pages&action=Card'">
+
                                     <img src="<?= !empty($film['image_url']) ? $film['image_url'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg' ?>" class="card-img-top rounded fixed-size-image" alt="Film poster">
                                     <div class="card-body">
                                         <h5 class="card-title text-warning"><?= htmlspecialchars($film['primaryTitle']) ?></h5>
@@ -37,10 +37,13 @@
 
                     <nav class="mt-4">
                         <ul
-                            class="pagination justify-content-center">
+                            class="pagination justify-content-center pagination-lg">
                             <?php if ($page > 1): ?>
                                 <li class="page-item">
-                                    <a class="page-link bg-warning text-dark rounded-pill" href="index.php?element=pages&action=Film&page=<?= $page - 1 ?>">Précédent</a>
+                                    <a class="page-link bg-warning text-dark rounded-pill" href="index.php?element=pages&action=Film&page=<?= $page - 1 ?>">
+                                        <i class="bi bi-arrow-left-circle"></i>
+                                        Précédent
+                                    </a>
                                 </li>
                             <?php endif; ?>
 
@@ -72,15 +75,18 @@
 
                             <?php if ($page < $totalPages): ?>
                                 <li class="page-item">
-                                    <a class="page-link bg-warning text-dark rounded-pill" href="index.php?element=pages&action=Film&page=<?= $page + 1 ?>">Suivant</a>
+                                    <a class="page-link bg-warning text-dark rounded-pill" href="index.php?element=pages&action=Film&page=<?= $page + 1 ?>">
+                                        Suivant
+                                        <i class="bi bi-arrow-right-circle"></i>
+                                    </a>
                                 </li>
                             <?php endif; ?>
 
                             <!-- Formulaire pour entrer une page manuellement -->
-                            <form class="d-inline-block" method="get" action="index.php">
+                            <form class="d-inline-block mt-3" method="get" action="index.php">
                                 <input type="hidden" name="element" value="pages">
                                 <input type="hidden" name="action" value="Film">
-                                <div class="input-group mt-3">
+                                <div class="input-group">
                                     <input type="number" name="page" min="1" max="<?= $totalPages ?>" class="form-control rounded-pill" placeholder="Page" aria-label="Numéro de page" value="<?= $page ?>" style="max-width: 120px;">
                                     <button class="btn btn-warning text-dark rounded-pill" type="submit">Aller</button>
                                 </div>

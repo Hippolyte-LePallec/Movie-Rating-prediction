@@ -29,10 +29,10 @@ class Crew
 
         $stmt->execute();
         
-        // Récupérer tous les résultats sous forme de tableau associatif
+
         $actors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Organiser les résultats par acteur
+
         $result = [];
         foreach ($actors as $actor) {
             $perso_id = $actor['perso_id'];
@@ -47,7 +47,6 @@ class Crew
                 ];
             }
 
-            // Ajouter les films de l'acteur
             $result[$perso_id]['films'][] = [
                 'media_id' => $actor['media_id'],
                 'primaryTitle' => $actor['primaryTitle'],
@@ -63,7 +62,6 @@ class Crew
         return $result;
     }
 
-    // Récupérer les membres de l'équipe d'un film
     public function getCrewMembersByFilm($media_id)
     {
         $stmt = $this->db->prepare("
@@ -79,7 +77,6 @@ class Crew
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Récupérer les films par membre de l'équipe
     public function getFilmsByCrewMember($perso_id)
     {
         $stmt = $this->db->prepare("

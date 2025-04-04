@@ -5,12 +5,14 @@
   --noir-gris: #161616;
   --rouge-cinema: #b91c1c;
   --or-elegant: #d4af37;
-  --texte-clair: #ffff00; /* Changer la couleur du texte en jaune */
+  --texte-clair: #ffff00;
+  /* Changer la couleur du texte en jaune */
   --accent-subtil: #333333;
   --ombre-profonde: rgba(0, 0, 0, 0.85);
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   display: flex;
@@ -47,7 +49,8 @@ main {
 
 .maincontent {
   padding-top: 30px;
-  flex: 1; /* Permet au contenu principal de prendre tout l'espace disponible */
+  flex: 1;
+  /* Permet au contenu principal de prendre tout l'espace disponible */
 }
 
 /* Pour les menus déroulants en boutton, 
@@ -143,12 +146,10 @@ button:before {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg, 
-    transparent, 
-    rgba(255, 255, 255, 0.15), 
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.15),
+      transparent);
   transition: all 0.5s ease;
 }
 
@@ -218,6 +219,7 @@ span.psw:hover {
     display: block;
     float: none;
   }
+
   .cancelbtn {
     width: 100%;
   }
@@ -295,6 +297,7 @@ span.psw:hover {
     display: block;
     text-align: left;
   }
+
   .header-right {
     float: none;
   }
@@ -340,14 +343,18 @@ td {
 .left {
   text-align: left;
 }
+
 .center {
   text-align: center;
 }
+
 .right {
   text-align: right;
 }
 
-th.left, th.center, th.right {
+th.left,
+th.center,
+th.right {
   text-align: center;
 }
 
@@ -507,7 +514,7 @@ th.left, th.center, th.right {
   color: var(--or-elegant) !important;
 }
 
-.navbar-nav .active > .nav-link {
+.navbar-nav .active>.nav-link {
   color: var(--or-elegant) !important;
   font-weight: bold;
 }
@@ -535,16 +542,28 @@ th.left, th.center, th.right {
   background: linear-gradient(135deg, #aa1818, #6b1818);
 }
 
+.pagination .page-item {
+  margin: 0 10px;
+}
+
+
+.pagination+.d-inline-block {
+  margin-top: 20px;
+}
+
 /* Footer styles */
 .footer {
   width: 100%;
-  background-color: #343a40; /* Couleur de fond du footer */
+  background-color: #343a40;
+  /* Couleur de fond du footer */
   color: #fff;
   background: linear-gradient(to right, #141414, #0a0a0a);
   border-top: 2px solid var(--rouge-cinema);
   padding: 30px 0;
-  margin-top: auto; /* Pousse le footer vers le bas */
-  position: relative; /* Pour le pseudo-élément */
+  margin-top: auto;
+  /* Pousse le footer vers le bas */
+  position: relative;
+  /* Pour le pseudo-élément */
 }
 
 .footer:before {
@@ -631,15 +650,13 @@ th.left, th.center, th.right {
   top: 0;
   height: 100vh;
   width: 20px;
-  background-image: repeating-linear-gradient(
-    0deg,
-    var(--noir-profond) 0px,
-    var(--noir-profond) 4px,
-    var(--or-elegant) 4px,
-    var(--or-elegant) 6px,
-    var(--noir-profond) 6px,
-    var(--noir-profond) 12px
-  );
+  background-image: repeating-linear-gradient(0deg,
+      var(--noir-profond) 0px,
+      var(--noir-profond) 4px,
+      var(--or-elegant) 4px,
+      var(--or-elegant) 6px,
+      var(--noir-profond) 6px,
+      var(--noir-profond) 12px);
   opacity: 0.3;
   z-index: 0;
 }
@@ -673,19 +690,47 @@ th.left, th.center, th.right {
 }
 
 .fixed-size-image {
-  width: 200px; /* Largeur fixe */
-  height: 300px; /* Hauteur fixe */
-  object-fit: cover; /* Ajuste l'image pour remplir la zone sans déformer */
+  width: 200px;
+  /* Largeur fixe */
+  height: 300px;
+  /* Hauteur fixe */
+  object-fit: cover;
+  /* Ajuste l'image pour remplir la zone sans déformer */
 }
 
 @keyframes starTwinkle {
-  0% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.1); }
-  100% { opacity: 0.4; transform: scale(1); }
+  0% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
 }
 
-.star:nth-child(1) { animation: starTwinkle 4s infinite 0s; }
-.star:nth-child(2) { animation: starTwinkle 4s infinite 0.6s; }
-.star:nth-child(3) { animation: starTwinkle 4s infinite 1.2s; }
-.star:nth-child(4) { animation: starTwinkle 4s infinite 1.8s; }
-.star:nth-child(5) { animation: starTwinkle 4s infinite 2.4s; }
+.star:nth-child(1) {
+  animation: starTwinkle 4s infinite 0s;
+}
+
+.star:nth-child(2) {
+  animation: starTwinkle 4s infinite 0.6s;
+}
+
+.star:nth-child(3) {
+  animation: starTwinkle 4s infinite 1.2s;
+}
+
+.star:nth-child(4) {
+  animation: starTwinkle 4s infinite 1.8s;
+}
+
+.star:nth-child(5) {
+  animation: starTwinkle 4s infinite 2.4s;
+}
