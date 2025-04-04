@@ -31,14 +31,12 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
                         <div class="mb-3">
                             <label for="birthYear" class="form-label">Année de naissance</label>
                             <input type="number" class="form-control bg-dark text-light border-secondary" id="birthYear" name="birthYear" min="1800" max="<?= date('Y') ?>">
-                            <small class="text-muted">Laissez vide si inconnu.</small>
                         </div>
 
                         <!-- Année de décès -->
                         <div class="mb-3">
                             <label for="deathYear" class="form-label">Année de décès</label>
                             <input type="number" class="form-control bg-dark text-light border-secondary" id="deathYear" name="deathYear" min="1800" max="<?= date('Y') ?>">
-                            <small class="text-muted">Laissez vide si la personne est encore en vie.</small>
                         </div>
 
                         <!-- Boutons -->
