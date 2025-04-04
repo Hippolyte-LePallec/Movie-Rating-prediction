@@ -12,7 +12,7 @@
                         <?php foreach ($films as $film): ?>
                             <div class="col">
                                 <div
-                                    class="card h-100 bg-dark text-light border-secondary shadow-lg rounded cursor-pointer" onclick="window.location.href='./index.php?element=pages&action=Card'">
+                                    class="card h-100 bg-dark text-light border-secondary shadow-lg rounded cursor-pointer" onclick="window.location.href='./index.php?element=pages&action=Card&id=<?= urlencode($film['media_id']); ?>'">
 
                                     <img src="<?= !empty($film['image_url']) ? $film['image_url'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg' ?>" class="card-img-top rounded fixed-size-image" alt="Film poster">
                                     <div class="card-body">
