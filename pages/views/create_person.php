@@ -1,3 +1,7 @@
+<?php
+require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header global
+?>
+
 <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -45,3 +49,7 @@
         </div>
     </div>
 </div>
+
+<?php
+require_once(dirname(__FILE__) . '/../../inc/footer.php'); // Inclure le footer global
+?>
