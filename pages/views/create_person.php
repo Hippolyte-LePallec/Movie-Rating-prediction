@@ -10,7 +10,7 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
                     <h3 class="text-warning mb-0">Créer une nouvelle personne</h3>
                 </div>
                 <div class="card-body">
-                    <form action="create_person.php" method="POST" class="needs-validation" novalidate>
+                    <form action="../controllers/create_person.php" method="POST" class="needs-validation" novalidate>
                         <!-- Nom principal -->
                         <div class="mb-3">
                             <label for="primaryName" class="form-label">Nom <span class="text-danger">*</span></label>

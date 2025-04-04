@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/lib/mypdo.php');
+require_once(dirname(__FILE__) . '/../../lib/mypdo.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $primaryName = $_POST['primaryName'];
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':deathYear', $deathYear);
         $stmt->execute();
 
-        header('Location: index.php?element=pages&action=PersonList&success=1');
+        header('Location: ../../index.php?element=pages&action=PersonList&success=1');
         exit;
     } catch (PDOException $e) {
         echo "Erreur : " . $e->getMessage();
