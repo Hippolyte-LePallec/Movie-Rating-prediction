@@ -1,6 +1,8 @@
 <?php
 require_once(dirname(__FILE__) . '/../../lib/mypdo.php');
 
+$message = "";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $primaryName = $_POST['primaryName'];
     $birthYear = !empty($_POST['birthYear']) ? $_POST['birthYear'] : null;
@@ -16,11 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':deathYear', $deathYear);
         $stmt->execute();
 
-        // Redirection après succès
-        header('Location: ../../index.php?element=pages&action=PersonList&success=1');
-        exit;
+        $message = "Personne créée avec succès.";
     } catch (PDOException $e) {
-        echo "Erreur : " . $e->getMessage();
+        $message = "Erreur : " . $e->getMessage();
     }
 }
+
+// Inclure la vue
+include(dirname(__FILE__) . '/../views/create_person.php');
 ?>
