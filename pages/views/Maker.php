@@ -1,9 +1,36 @@
 <?php
-require_once __DIR__ . '/../../class/maker.class.php';
+require_once __DIR__ . '/../../class/personne.class.php';
+require_once __DIR__ . '/../../class/genre.class.php';
 
-// Au début du fichier, après les includes
-$maker = new Maker($db);
-$genres = $maker->getGenres();
+// Afficher toutes les erreurs
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+
+// Instanciation des objets
+$personne = new Personne($db);
+$genre = new Genre($db);
+$genres = $genre->fetchAll();
+
+// Traitement de la recherche
+$searchResult = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term'])) {
+    $searchTerm = $_POST['search_term'];
+    $type = $_POST['search_type'];
+
+    // Recherche en fonction du type
+    switch ($type) {
+        case 'director':
+            $searchResult = $personne->searchPersons($searchTerm);  // Search directors by name
+            break;
+        case 'writer':
+            $searchResult = $personne->searchPersons($searchTerm);  // Search writers by name
+            break;
+        case 'actor':
+            $searchResult = $personne->searchPersons($searchTerm);  // Search actors by name
+            break;
+    }
+}
 ?>
 
 <div class="container mt-4 mb-5">
@@ -14,46 +41,36 @@ $genres = $maker->getGenres();
                     <h3 class="text-warning mb-0">Ajouter un média</h3>
                 </div>
                 <div class="card-body">
-                    <form action="<?= $_SERVER['PHP_SELF'] ?>?element=media&action=add" method="post" class="needs-validation" novalidate>
+                    <form action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker" method="post" class="needs-validation" novalidate>
                         <!-- Informations de base -->
                         <div class="mb-3">
                             <label for="primaryTitle" class="form-label">Titre <span class="text-danger">*</span></label>
                             <input type="text" class="form-control bg-dark text-light" id="primaryTitle" name="primaryTitle" required>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="startYear" class="form-label">Année <span class="text-danger">*</span></label>
-                                <select class="form-select bg-dark text-light" id="startYear" name="startYear" required>
-                                    <option value="">Sélectionner...</option>
-                                    <?php for($i = date('Y'); $i >= 1900; $i--): ?>
-                                        <option value="<?= $i ?>"><?= $i ?></option>
-                                    <?php endfor; ?>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="runtimeMinutes" class="form-label">Durée (min) <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control bg-dark text-light" id="runtimeMinutes" name="runtimeMinutes" min="1" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="isAdult" class="form-label">Contenu adulte</label>
-                                <select class="form-control bg-dark text-light" id="isAdult" name="isAdult">
-                                    <option value="0">Non</option>
-                                    <option value="1">Oui</option>
-                                </select>
-                            </div>
+                        <!-- Sélection de l'année -->
+                        <div class="mb-3">
+                            <label for="startYear" class="form-label">Année <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control bg-dark text-light" id="startYear" name="startYear" min="1900" max="<?= date('Y') ?>" required>
+                        </div>
+
+                        <!-- Sélection de la durée -->
+                        <div class="mb-3">
+                            <label for="runtimeMinutes" class="form-label">Durée (min) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control bg-dark text-light" id="runtimeMinutes" name="runtimeMinutes" min="1" max="600" required>
+                            <small class="text-light">Durée en minutes (max 600 minutes)</small>
                         </div>
 
                         <!-- Genres -->
                         <div class="mb-3">
                             <label class="form-label">Genres <span class="text-danger">*</span></label>
                             <div class="row">
-                                <?php foreach($genres as $genre): ?>
+                                <?php foreach ($genres as $genre): ?>
                                     <div class="col-md-3 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="genres[]" value="<?= $genre['id'] ?>" id="genre<?= $genre['id'] ?>">
-                                            <label class="form-check-label text-light" for="genre<?= $genre['id'] ?>">
-                                                <?= htmlspecialchars($genre['name']) ?>
+                                            <input class="form-check-input" type="checkbox" name="genres[]" value="<?= $genre['genre_id'] ?>" id="genre<?= $genre['genre_id'] ?>">
+                                            <label class="form-check-label text-light" for="genre<?= $genre['genre_id'] ?>">
+                                                <?= htmlspecialchars($genre['genre_name']) ?>
                                             </label>
                                         </div>
                                     </div>
@@ -64,22 +81,76 @@ $genres = $maker->getGenres();
                         <!-- Réalisateur -->
                         <div class="mb-3">
                             <label for="director" class="form-label">Réalisateur <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control bg-dark text-light" id="director" name="director" required>
-                            <input type="hidden" name="director_id" id="director_id">
+                            <input type="text" class="form-control bg-dark text-light" id="director" name="director" value="<?= isset($_POST['director']) ? htmlspecialchars($_POST['director']) : '' ?>" required>
+                            <input type="hidden" name="director_id" id="director_id" value="<?= isset($_POST['director_id']) ? $_POST['director_id'] : '' ?>">
+
+                            <!-- Recherche pour le réalisateur -->
+                            <form method="POST" action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker">
+                                <input type="text" name="search_term" class="form-control bg-dark text-light" placeholder="Rechercher un réalisateur">
+                                <input type="hidden" name="search_type" value="director">
+                                <button type="submit" class="btn btn-secondary">Rechercher</button>
+                            </form>
+                            <?php if ($searchResult && $_POST['search_type'] == 'director'): ?>
+                                <ul class="list-group mt-2">
+                                    <?php foreach ($searchResult as $person): ?>
+                                        <li class="list-group-item">
+                                            <a href="javascript:void(0);" onclick="document.getElementById('director').value = '<?= htmlspecialchars($person['primaryName']) ?>'; document.getElementById('director_id').value = '<?= $person['perso_id'] ?>';">
+                                                <?= htmlspecialchars($person['primaryName']) ?>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Scénariste -->
                         <div class="mb-3">
                             <label for="writer" class="form-label">Scénariste <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control bg-dark text-light" id="writer" name="writer" required>
-                            <input type="hidden" name="writer_id" id="writer_id">
+                            <input type="text" class="form-control bg-dark text-light" id="writer" name="writer" value="<?= isset($_POST['writer']) ? htmlspecialchars($_POST['writer']) : '' ?>" required>
+                            <input type="hidden" name="writer_id" id="writer_id" value="<?= isset($_POST['writer_id']) ? $_POST['writer_id'] : '' ?>">
+
+                            <!-- Recherche pour le scénariste -->
+                            <form method="POST" action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker">
+                                <input type="text" name="search_term" class="form-control bg-dark text-light" placeholder="Rechercher un scénariste">
+                                <input type="hidden" name="search_type" value="writer">
+                                <button type="submit" class="btn btn-secondary">Rechercher</button>
+                            </form>
+                            <?php if ($searchResult && $_POST['search_type'] == 'writer'): ?>
+                                <ul class="list-group mt-2">
+                                    <?php foreach ($searchResult as $person): ?>
+                                        <li class="list-group-item">
+                                            <a href="javascript:void(0);" onclick="document.getElementById('writer').value = '<?= htmlspecialchars($person['primaryName']) ?>'; document.getElementById('writer_id').value = '<?= $person['perso_id'] ?>';">
+                                                <?= htmlspecialchars($person['primaryName']) ?>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Acteur principal -->
                         <div class="mb-3">
                             <label for="actor" class="form-label">Acteur principal <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control bg-dark text-light" id="actor" name="actor" required>
-                            <input type="hidden" name="actor_id" id="actor_id">
+                            <input type="text" class="form-control bg-dark text-light" id="actor" name="actor" value="<?= isset($_POST['actor']) ? htmlspecialchars($_POST['actor']) : '' ?>" required>
+                            <input type="hidden" name="actor_id" id="actor_id" value="<?= isset($_POST['actor_id']) ? $_POST['actor_id'] : '' ?>">
+
+                            <!-- Recherche pour l'acteur -->
+                            <form method="POST" action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker">
+                                <input type="text" name="search_term" class="form-control bg-dark text-light" placeholder="Rechercher un acteur">
+                                <input type="hidden" name="search_type" value="actor">
+                                <button type="submit" class="btn btn-secondary">Rechercher</button>
+                            </form>
+                            <?php if ($searchResult && $_POST['search_type'] == 'actor'): ?>
+                                <ul class="list-group mt-2">
+                                    <?php foreach ($searchResult as $person): ?>
+                                        <li class="list-group-item">
+                                            <a href="javascript:void(0);" onclick="document.getElementById('actor').value = '<?= htmlspecialchars($person['primaryName']) ?>'; document.getElementById('actor_id').value = '<?= $person['perso_id'] ?>';">
+                                                <?= htmlspecialchars($person['primaryName']) ?>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Description -->
@@ -103,70 +174,3 @@ $genres = $maker->getGenres();
         </div>
     </div>
 </div>
-
-<script>
-$(document).ready(function() {
-    // Configuration de l'autocomplétion
-    function setupAutocomplete(inputId, type) {
-        $(inputId).autocomplete({
-            source: function(request, response) {
-                $.ajax({
-                    url: 'ajax/search_persons.php',
-                    dataType: 'json',
-                    data: { term: request.term, type: type },
-                    success: function(data) {
-                        response(data.map(function(item) {
-                            return {
-                                label: item.name,
-                                value: item.id
-                            };
-                        }));
-                    }
-                });
-            },
-            minLength: 1,
-            select: function(event, ui) {
-                event.preventDefault();
-                $(this).val(ui.item.label);
-                $(this).siblings('input[type="hidden"]').val(ui.item.value);
-            }
-        });
-    }
-
-    // Initialisation des autocompletions
-    setupAutocomplete('#director', 'director');
-    setupAutocomplete('#writer', 'writer');
-    setupAutocomplete('#actor', 'actor');
-
-    // Validation du formulaire
-    $('form').on('submit', function(e) {
-        if (!$('input[name="genres[]"]:checked').length) {
-            e.preventDefault();
-            alert('Veuillez sélectionner au moins un genre');
-        }
-    });
-});
-</script>
-
-<style>
-.ui-autocomplete {
-    max-height: 200px;
-    overflow-y: auto;
-    background-color: #343a40;
-    border: 1px solid #495057;
-}
-
-.ui-menu-item {
-    padding: 5px 10px;
-    color: #fff;
-    cursor: pointer;
-}
-
-.ui-menu-item:hover {
-    background-color: #495057;
-}
-
-.form-check-input:checked + .form-check-label {
-    color: #ffc107;
-}
-</style>
