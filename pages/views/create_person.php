@@ -16,7 +16,7 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
                         </div>
                     <?php endif; ?>
 
-                    <form action="../controllers/create_person.php" method="POST" class="needs-validation" novalidate>
+                    <form method="POST" class="needs-validation" novalidate>
                         <!-- Nom principal -->
                         <div class="mb-3">
                             <label for="primaryName" class="form-label">Nom <span class="text-danger">*</span></label>
@@ -39,6 +39,13 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
                             <input type="number" class="form-control bg-dark text-light" id="deathYear" name="deathYear" min="1800" max="<?= date('Y') ?>">
                             <small class="text-muted">Laissez vide si la personne est encore en vie.</small>
                         </div>
+                        
+                        <!-- Profession principale -->
+                        <div class="mb-3">
+                            <label for="primaryProfession" class="form-label">Profession principale</label>
+                            <input type="text" class="form-control bg-dark text-light" id="primaryProfession" name="primaryProfession">
+                            <small class="text-muted">Par exemple: acteur, réalisateur, scénariste...</small>
+                        </div>
 
                         <!-- Boutons -->
                         <div class="row mt-4">
@@ -55,6 +62,25 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
         </div>
     </div>
 </div>
+
+<script>
+// Validation du formulaire côté client
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
 
 <?php
 require_once(dirname(__FILE__) . '/../../inc/footer.php'); // Inclure le footer global
