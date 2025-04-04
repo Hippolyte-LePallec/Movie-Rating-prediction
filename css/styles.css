@@ -199,6 +199,10 @@ img.avatar {
 /* Add padding to containers */
 .container {
   padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 /* The "Forgot password" text */
@@ -551,6 +555,8 @@ th.right {
   margin-top: 20px;
 }
 
+
+
 /* Footer styles */
 .footer {
   width: 100%;
@@ -633,13 +639,13 @@ th.right {
 }
 
 .card-text.genres {
-  text-align: center; /* Centre les genres */
+  text-align: center; 
   margin-top: 10px;
 }
 
 .card-text.genres .badge {
-  display: inline-block; /* Les genres restent alignés horizontalement */
-  margin: 5px 2px; /* Espacement entre les badges */
+  display: inline-block; 
+  margin: 5px 2px; 
 }
 
 .badge {
