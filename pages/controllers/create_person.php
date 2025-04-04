@@ -18,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':primaryName', $primaryName);
         $stmt->bindParam(':birthYear', $birthYear);
         $stmt->bindParam(':deathYear', $deathYear);
-        $stmt->bindParam(':primaryProfession', $primaryProfession);
         $stmt->execute();
 
         $message = "Personne créée avec succès.";
