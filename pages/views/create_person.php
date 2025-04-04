@@ -39,14 +39,6 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
                             <input type="number" class="form-control bg-dark text-light" id="deathYear" name="deathYear" min="1800" max="<?= date('Y') ?>">
                             <small class="text-muted">Laissez vide si la personne est encore en vie.</small>
                         </div>
-                        
-                        <!-- Profession principale -->
-                        <div class="mb-3">
-                            <label for="primaryProfession" class="form-label">Profession principale</label>
-                            <input type="text" class="form-control bg-dark text-light" id="primaryProfession" name="primaryProfession">
-                            <small class="text-muted">Par exemple: acteur, réalisateur, scénariste...</small>
-                        </div>
-
                         <!-- Boutons -->
                         <div class="row mt-4">
                             <div class="col-md-6">

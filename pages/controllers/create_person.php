@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Requête SQL pour insérer une nouvelle personne
-        $stmt = $db->prepare("
-            INSERT INTO personne (primaryname, birthyear, deathyear, primaryprofession)
-            VALUES (:primaryName, :birthYear, :deathYear, :primaryProfession)
-        ");
+        $stmt = $db->prepare('
+            INSERT INTO personne ("primaryName", "birthYear", "deathYear")
+            VALUES (:primaryName, :birthYear, :deathYear)
+        ');
         $stmt->bindParam(':primaryName', $primaryName);
         $stmt->bindParam(':birthYear', $birthYear);
         $stmt->bindParam(':deathYear', $deathYear);
