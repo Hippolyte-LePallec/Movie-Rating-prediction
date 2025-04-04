@@ -18,12 +18,12 @@ class Crew
     public function getAllActorsWithFilms()
     {
         $stmt = $this->db->prepare("
-            SELECT p.perso_id, p.primary_name, p.birth_year, p.death_year, p.profession, 
-                   m.media_id, m.primaryTitle, m.startYear, m.runtimeMinutes, m.media_url, c.job, c.characters, c.ordering
+            SELECT p.perso_id, p.\"primaryName\", p.birth_year, p.death_year, p.profession, 
+                   m.media_id, m.\"primaryTitle\", m.\"startYear\", m.\"runtimeMinutes\", m.media_url, c.job, c.characters, c.ordering
             FROM personne p
             JOIN principal c ON p.perso_id = c.perso_id
             JOIN media m ON c.media_id = m.media_id
-            WHERE p.profession = 'actor'  -- Vous pouvez ajuster selon les professions (par exemple 'actor' ou 'actress')
+            WHERE p.profession = 'actor' 
             ORDER BY p.primary_name, c.ordering
         ");
 
@@ -63,19 +63,20 @@ class Crew
     }
 
     public function getCrewMembersByFilm($media_id)
-    {
-        $stmt = $this->db->prepare("
-            SELECT p.perso_id, p.primary_name, p.profession, c.job, c.characters, c.ordering
-            FROM principal c
-            JOIN personne p ON c.perso_id = p.perso_id
-            WHERE c.media_id = :media_id
-            ORDER BY c.ordering
-        ");
+{
+    $stmt = $this->db->prepare("
+        SELECT p.perso_id, p.\"primaryName\", p.\"primaryProfession\", c.job, c.characters, c.ordering
+        FROM principal c
+        JOIN personne p ON c.perso_id = p.perso_id
+        WHERE c.media_id = :media_id
+        ORDER BY c.ordering
+    ");
 
-        $stmt->bindParam(':media_id', $media_id, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    $stmt->bindParam(':media_id', $media_id, PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
     public function getFilmsByCrewMember($perso_id)
     {
