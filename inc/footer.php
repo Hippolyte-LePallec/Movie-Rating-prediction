@@ -5,31 +5,21 @@ if (isset($db)) {
     $db = NULL;
     
 }
-if (is_array($_SESSION['mesgs']) && is_array($_SESSION['mesgs']['confirm'])) {
-    foreach ($_SESSION['mesgs']['confirm'] as $mesg) {
-?>
-        <div class="alertbox messagebox">
-            <span class="closebtn">&times;</span>
-            <?= $mesg; ?>
-        </div>
-    <?php
-    }
-    unset($_SESSION['mesgs']['confirm']);
-}
-if (is_array($_SESSION['mesgs']) && is_array($_SESSION['mesgs']['errors'])) {
-    foreach ($_SESSION['mesgs']['errors'] as $err) {
-    ?>
-        <div class="alertbox errorbox">
-            <span class="closebtn">&times;</span>
-            <?= $err; ?>
-        </div>
+if (isset($_SESSION['confirm'])) : ?>
+    <div class="alert alert-success">
+        <?= $_SESSION['confirm']; ?>
+    </div>
+    <?php unset($_SESSION['confirm']); ?>
+<?php endif; ?>
 
-<?php
-    }
-    unset($_SESSION['mesgs']['errors']);
-
-}
-?>
+<?php if (isset($_SESSION['errors'])) : ?>
+    <div class="alert alert-danger">
+        <?php foreach ($_SESSION['errors'] as $error) : ?>
+            <?= $error ?><br>
+        <?php endforeach; ?>
+    </div>
+    <?php unset($_SESSION['errors']); ?>
+<?php endif; ?>
 
 <script>
     // Get all elements with class="closebtn"
