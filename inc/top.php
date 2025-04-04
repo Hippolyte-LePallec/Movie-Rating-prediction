@@ -1,7 +1,6 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div
-    class="container-fluid">
+  <div class="container-fluid">
     <!-- Logo -->
     <a class="navbar-brand fw-bold text-warning" href="index.php">
       <i class="fas fa-film"></i>
@@ -15,8 +14,7 @@
 
     <!-- Contenu de la navbar -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul
-        class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <?php
         $list_menus = array(
           'Film' => 'Film',
@@ -32,26 +30,25 @@
       </ul>
 
       <!-- Barre de recherche -->
-      <!-- Barre de recherche -->
-<form class="d-flex" role="search" method="POST" action="index.php?element=pages&action=Film">
-    <input class="form-control me-2" type="search" name="titre" placeholder="Rechercher un film..." aria-label="Search">
-    <button class="btn btn-outline-light" type="submit">
-        <i class="fas fa-search"></i>
-    </button>
-</form>
-
-
-
-      <!-- Connexion -->
+      <form class="d-flex" role="search" method="POST" action="index.php?element=pages&action=Film">
+        <input class="form-control me-2" type="search" name="titre" placeholder="Rechercher un film..." aria-label="Search">
+        <button class="btn btn-outline-light" type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+      </form>
       <ul class="navbar-nav ms-3">
-        <li class="nav-item">
-          <a class="nav-link text-light" href="#" data-bs-toggle="modal" data-bs-target="#connexionModal">
-            <i class="fas fa-sign-in-alt"></i>
-            Connexion
-          </a>
-        </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user"></i> <?=urlencode($_SESSION['user']['username'])?>
+            </a>
+            <ul class="dropdown-menu bg-dark text-light" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item text-warning" href="index.php?element=pages&action=User"><i class="fas fa-user-circle"></i> Mon profil</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="login.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+            </ul>
+          </li>
       </ul>
     </div>
   </div>
 </nav>
-

@@ -28,7 +28,6 @@ class Crew
         ");
 
         $stmt->execute();
-        
 
         $actors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
