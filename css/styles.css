@@ -766,3 +766,21 @@ th.right {
 .star:nth-child(5) {
   animation: starTwinkle 4s infinite 2.4s;
 }
+
+.large-card {
+  height: 600px; /* Hauteur fixe */
+  width: 600px;  /* Largeur fixe */
+  margin: 0 auto; /* Centrer la carte */
+}
+
+.large-card .card-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 60px); /* Ajuste la hauteur pour inclure l'en-tête */
+}
+
+canvas#chart-genres {
+  height: 100%;
+  width: 100%;
+}

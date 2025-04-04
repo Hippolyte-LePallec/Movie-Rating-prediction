@@ -20,6 +20,7 @@
           'Film' => 'Film',
           'Statistiques' => 'Statistiques',
           'Maker' => 'Film maker',
+          'create_person' => 'Créer une personne',
         );
 
         foreach ($list_menus as $key => $menu): ?>
