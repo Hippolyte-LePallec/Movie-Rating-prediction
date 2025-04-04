@@ -388,6 +388,33 @@ document.addEventListener('DOMContentLoaded', function() {
     border-color: #ffc107;
 }
 
+/* Style pour les bordures */
+.border-secondary {
+    border-color: rgba(255, 193, 7, 0.5) !important;
+}
+
+.list-group-item {
+    margin-bottom: 4px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    border-radius: 4px !important;
+    border-color: rgba(255, 193, 7, 0.5) !important;
+}
+
+.form-control, .form-select {
+    border-color: rgba(255, 193, 7, 0.5);
+}
+
+.input-group .form-control,
+.input-group .btn,
+.input-group .form-select {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    border-radius: 0;
+    border-color: rgba(255, 193, 7, 0.5);
+}
+
 /* Style pour les listes de personnes */
 .list-group-item {
     margin-bottom: 4px;
