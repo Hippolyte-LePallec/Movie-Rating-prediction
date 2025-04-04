@@ -768,8 +768,8 @@ th.right {
 }
 
 .large-card {
-  height: 500px; /* Hauteur fixe */
-  width: 500px;  /* Largeur fixe */
+  height: 600px; /* Hauteur fixe */
+  width: 600px;  /* Largeur fixe */
   margin: 0 auto; /* Centrer la carte */
 }
 
