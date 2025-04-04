@@ -1,6 +1,7 @@
 <?php
 class ActorRating {
     private $db;
+    private $partial_title;
 
     public function __construct($db) {
         $this->db = $db;
@@ -69,10 +70,21 @@ class ActorRating {
     }
 
     // Prédiction pour un titre partiel
-    public function predictRatingByPartialTitle($partialTitle) {
-        $query = $this->db->prepare("SELECT get_average_rating_by_partial_title(:partialTitle) AS rating");
-        $query->execute([':partialTitle' => $partialTitle]);
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result['rating'] : 0;
+    public function predictRatingByPartialTitle($partial_title) {
+        $this->partial_title = $partial_title;
+        
+        $sql = "SELECT AVG(r.\"averageRating\")
+                FROM rating AS r
+                INNER JOIN media AS m ON r.media_id = m.media_id
+                WHERE m.primary_title ILIKE '%' || :partial_title || '%'";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['partial_title' => $this->partial_title]);
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("Erreur SQL : " . $e->getMessage());
+            return false;
+        }
     }
 }

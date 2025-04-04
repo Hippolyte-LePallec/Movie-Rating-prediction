@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term']) && !em
                     <h3 class="text-warning mb-0">Ajouter un média</h3>
                 </div>
                 <div class="card-body">
-                    <form action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker" method="post" class="needs-validation" novalidate id="mediaForm">
+                    <form action="index.php?element=pages&action=Prediction" method="post" class="needs-validation" novalidate id="mediaForm">
                         <!-- Informations de base -->
                         <div class="mb-3">
                             <label for="primaryTitle" class="form-label">Titre <span class="text-danger">*</span></label>
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term']) && !em
                                             <option value="writer" <?= isset($_POST['search_type']) && $_POST['search_type'] == 'writer' ? 'selected' : '' ?>>Scénariste</option>
                                             <option value="actor" <?= isset($_POST['search_type']) && $_POST['search_type'] == 'actor' ? 'selected' : '' ?>>Acteur</option>
                                         </select>
-                                        <button type="submit" class="btn btn-warning" id="searchPersonBtn">Rechercher</button>
+                                        <button type="button" class="btn btn-warning" id="searchPersonBtn">Rechercher</button>
                                     </div>
 
                                     <!-- Résultats de recherche -->
@@ -285,6 +285,105 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     }
     
+    // Gestionnaire pour la recherche de personnes
+    document.getElementById('searchPersonBtn').addEventListener('click', function() {
+        const searchTerm = document.getElementById('searchPersonInput').value;
+        const searchType = document.getElementById('searchType').value;
+        
+        // Créer les données du formulaire
+        const formData = new FormData();
+        formData.append('search_term', searchTerm);
+        formData.append('search_type', searchType);
+        
+        // Envoyer la requête AJAX
+        fetch('index.php?element=pages&action=Maker', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(html => {
+            // Créer un DOM temporaire pour extraire les résultats
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const searchResults = doc.querySelector('#searchResultsContainer');
+            
+            if (searchResults) {
+                // Mettre à jour les résultats de recherche
+                document.getElementById('searchResultsContainer').innerHTML = searchResults.innerHTML;
+                document.getElementById('searchResultsContainer').classList.remove('d-none');
+                
+                // Réattacher les écouteurs d'événements aux nouveaux boutons
+                attachAddPersonListeners();
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+    });
+
+    // Fonction pour attacher les écouteurs d'événements aux boutons d'ajout
+    function attachAddPersonListeners() {
+        document.querySelectorAll('.add-person').forEach(function(button) {
+            button.addEventListener('click', function() {
+                let personId = this.getAttribute('data-id');
+                let personName = this.getAttribute('data-name');
+                let personType = this.getAttribute('data-type');
+                let listContainer;
+                let listSelector;
+                
+                // Sélectionner la liste appropriée en fonction du type
+                if (personType === 'director') {
+                    listContainer = document.querySelector('.selected-directors-list');
+                    listSelector = '.selected-directors-list';
+                } else if (personType === 'writer') {
+                    listContainer = document.querySelector('.selected-writers-list');
+                    listSelector = '.selected-writers-list';
+                } else if (personType === 'actor') {
+                    listContainer = document.querySelector('.selected-actors-list');
+                    listSelector = '.selected-actors-list';
+                }
+                
+                // Vérifier si la personne existe déjà dans la liste
+                if (personExistsInList(personId, listSelector)) {
+                    alert('Cette personne est déjà ajoutée à la liste !');
+                    return;
+                }
+                
+                // Créer un nouvel élément de liste pour la personne
+                let listItem = document.createElement('li');
+                listItem.className = 'list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center';
+                
+                // Créer un span pour le nom avec text-truncate pour gérer les noms longs
+                let nameSpan = document.createElement('span');
+                nameSpan.className = 'text-truncate me-2';
+                nameSpan.textContent = personName;
+                
+                // Créer l'input caché
+                let hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = personType + 's[]';
+                hiddenInput.value = personId + '|' + personName;
+                
+                // Créer le bouton de suppression
+                let removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.className = 'btn btn-sm btn-outline-danger remove-person';
+                removeButton.textContent = '×';
+                
+                // Ajouter les éléments à l'élément de liste
+                listItem.appendChild(nameSpan);
+                listItem.appendChild(hiddenInput);
+                listItem.appendChild(removeButton);
+                
+                // Ajouter l'élément à la liste
+                listContainer.appendChild(listItem);
+                
+                // Ajouter un gestionnaire d'événements pour le bouton de suppression
+                removeButton.addEventListener('click', function() {
+                    listItem.remove();
+                });
+            });
+        });
+    }
+    
     // Recherche de personne - ajouter au formulaire sans recharger
     document.querySelectorAll('.add-person').forEach(function(button) {
         button.addEventListener('click', function() {
@@ -354,6 +453,28 @@ document.addEventListener('DOMContentLoaded', function() {
             this.closest('li').remove();
         });
     });
+});
+
+// Validation du formulaire avant soumission
+document.getElementById('mediaForm').addEventListener('submit', function(event) {
+    let form = event.target;
+    
+    // Vérifier si les champs requis sont remplis
+    if (!form.primaryTitle.value || 
+        !form.startYear.value ||
+        !form.runtimeMinutes.value) {
+        event.preventDefault();
+        alert('Veuillez remplir tous les champs obligatoires');
+        return;
+    }
+
+    // Vérifier qu'au moins un genre est sélectionné
+    let genres = form.querySelectorAll('input[name="genres[]"]:checked');
+    if (genres.length === 0) {
+        event.preventDefault(); 
+        alert('Veuillez sélectionner au moins un genre');
+        return;
+    }
 });
 </script>
 
