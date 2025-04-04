@@ -10,7 +10,7 @@
                         class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 mb-5">
                         <?php foreach ($featuredFilms as $film): ?>
                             <div class="col">
-                                <div class="card h-100 bg-dark text-light border-secondary shadow-lg rounded">
+                                <div class="card h-100 bg-dark text-light border-secondary shadow-lg rounded" onclick="window.location.href='./index.php?element=pages&action=Card&id=<?= urlencode($film['media_id']); ?>'">
                                     <img src="<?= !empty($film['image_url']) ? $film['image_url'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg' ?>" class="card-img-top rounded fixed-size-image" alt="Film poster">
                                     <div class="card-body">
                                         <h5 class="card-title text-warning"><?= htmlspecialchars($film['primaryTitle']) ?></h5>
@@ -43,7 +43,7 @@
         class="row row-cols-1 row-cols-md-5 g-4 mb-5">
         <?php foreach ($topRatedFilmsList as $film): ?>
             <div class="col">
-                <div class="card h-100 bg-dark text-light border-secondary shadow-lg rounded">
+                <div class="card h-100 bg-dark text-light border-secondary shadow-lg rounded" onclick="window.location.href='./index.php?element=pages&action=Card&id=<?= urlencode($film['media_id']); ?>'">
                     <img src="<?= !empty($film['image_url']) ? $film['image_url'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg' ?>" class="card-img-top rounded fixed-size-image" alt="Film poster">
                     <div class="card-body">
                         <h5 class="card-title text-warning"><?= htmlspecialchars($film['primaryTitle']) ?></h5>
@@ -71,7 +71,7 @@
         class="row row-cols-1 row-cols-md-5 g-4 mb-5">
         <?php foreach ($worstRatedFilmsList as $film):; ?>
             <div class="col">
-                <div class="card h-100 bg-dark text-light border-secondary shadow-lg rounded">
+                <div class="card h-100 bg-dark text-light border-secondary shadow-lg rounded" onclick="window.location.href='./index.php?element=pages&action=Card&id=<?= urlencode($film['media_id']); ?>'">
                     <img src="<?= !empty($film['image_url']) ? $film['image_url'] : 'https://m.media-amazon.com/images/M/MV5BYzZlMjE5ZTgtNDU4Yi00NWE0LWIzN2UtZDI5OTc3ZjRiYmYyXkEyXkFqcGc@._V1_SX300.jpg' ?>" class="card-img-top rounded fixed-size-image" alt="Film poster">
                     <div class="card-body">
                         <h5 class="card-title text-warning"><?= htmlspecialchars($film['primaryTitle']) ?></h5>
