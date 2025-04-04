@@ -238,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term']) && !em
                                 <a href="?element=media&action=list" class="btn btn-secondary w-100">Annuler</a>
                             </div>
                             <div class="col-md-6">
-                                <button type="submit" class="btn btn-warning w-100">Enregistrer</button>
+                                <button type="submit" class="btn btn-warning w-100">Prédire</button>
                             </div>
                         </div>
 
@@ -440,5 +440,54 @@ document.addEventListener('DOMContentLoaded', function() {
 .text-muted {
     color: #adb5bd !important;
     font-size: 0.8rem;
+}
+
+/* Style pour le select et l'input group */
+.input-group {
+    align-items: center;
+}
+
+.input-group > * {
+    height: 36px !important;
+    line-height: 1;
+}
+
+.form-select {
+    width: auto;
+    min-width: 120px;
+    font-size: 0.9rem;
+    padding: 0.375rem 2rem 0.375rem 0.75rem;
+}
+
+.input-group .form-control,
+.input-group .btn,
+.input-group .form-select {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    border-radius: 0;
+}
+
+.input-group .form-control:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.input-group .btn:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* Ajuster la taille de l'input group */
+.input-group {
+    align-items: stretch;
+}
+
+.input-group .form-control,
+.input-group .btn {
+    height: calc(1.8rem + 2px);
+    font-size: 0.9rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
 }
 </style>
