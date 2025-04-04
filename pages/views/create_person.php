@@ -4,9 +4,10 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
 
 <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card bg-dark text-light">
-                <div class="card-header">
+        <!-- Augmenter la largeur de la colonne -->
+        <div class="col-md-10 col-lg-8">
+            <div class="card bg-dark text-light shadow-lg">
+                <div class="card-header text-center">
                     <h3 class="text-warning mb-0">Créer une nouvelle personne</h3>
                 </div>
                 <div class="card-body">
@@ -39,6 +40,7 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
                             <input type="number" class="form-control bg-dark text-light" id="deathYear" name="deathYear" min="1800" max="<?= date('Y') ?>">
                             <small class="text-muted">Laissez vide si la personne est encore en vie.</small>
                         </div>
+
                         <!-- Boutons -->
                         <div class="row mt-4">
                             <div class="col-md-6">
