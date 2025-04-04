@@ -768,9 +768,9 @@ th.right {
 }
 
 .large-card {
-  height: 500px; /* Augmente la hauteur de la carte */
+  height: 1500px; /* Augmente la hauteur de la carte */
 }
 
 .large-card .card-body {
-  height: 400px; /* Ajuste la hauteur du contenu de la carte */
+  height: 1400px; /* Ajuste la hauteur du contenu de la carte */
 }
