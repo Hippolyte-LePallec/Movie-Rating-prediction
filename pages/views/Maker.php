@@ -6,160 +6,233 @@ require_once __DIR__ . '/../../class/genre.class.php';
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-
 // Instanciation des objets
 $personne = new Personne($db);
 $genre = new Genre($db);
 $genres = $genre->fetchAll();
 
+// Initialisation des tableaux pour stocker les personnes sélectionnées
+$selectedDirectors = isset($_POST['directors']) ? $_POST['directors'] : [];
+$selectedWriters = isset($_POST['writers']) ? $_POST['writers'] : [];
+$selectedActors = isset($_POST['actors']) ? $_POST['actors'] : [];
+
 // Traitement de la recherche
 $searchResult = [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term'])) {
+$showSearchResults = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term']) && !empty($_POST['search_term'])) {
     $searchTerm = $_POST['search_term'];
     $type = $_POST['search_type'];
-
-    // Recherche en fonction du type
-    switch ($type) {
-        case 'director':
-            $searchResult = $personne->searchPersons($searchTerm);  // Search directors by name
-            break;
-        case 'writer':
-            $searchResult = $personne->searchPersons($searchTerm);  // Search writers by name
-            break;
-        case 'actor':
-            $searchResult = $personne->searchPersons($searchTerm);  // Search actors by name
-            break;
-    }
+    $searchResult = $personne->searchPersons($searchTerm);
+    $showSearchResults = true;
+    
+    // Conserver toutes les données soumises dans le formulaire
+    $formData = $_POST;
+} else {
+    $formData = $_POST;
 }
 ?>
 
 <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10"> <!-- Augmenté la largeur pour donner plus d'espace -->
             <div class="card bg-dark text-light">
                 <div class="card-header">
                     <h3 class="text-warning mb-0">Ajouter un média</h3>
                 </div>
                 <div class="card-body">
-                    <form action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker" method="post" class="needs-validation" novalidate>
+                    <form action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker" method="post" class="needs-validation" novalidate id="mediaForm">
                         <!-- Informations de base -->
                         <div class="mb-3">
                             <label for="primaryTitle" class="form-label">Titre <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control bg-dark text-light" id="primaryTitle" name="primaryTitle" required>
+                            <input type="text" class="form-control bg-dark text-light" id="primaryTitle" name="primaryTitle" value="<?= isset($formData['primaryTitle']) ? htmlspecialchars($formData['primaryTitle']) : '' ?>" required>
                         </div>
 
-                        <!-- Sélection de l'année -->
-                        <div class="mb-3">
-                            <label for="startYear" class="form-label">Année <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control bg-dark text-light" id="startYear" name="startYear" min="1900" max="<?= date('Y') ?>" required>
-                        </div>
+                        <div class="row">
+                            <!-- Sélection de l'année -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="startYear" class="form-label">Année <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control bg-dark text-light" id="startYear" name="startYear" min="1900" max="<?= date('Y') ?>" value="<?= isset($formData['startYear']) ? htmlspecialchars($formData['startYear']) : '' ?>" required>
+                                </div>
+                            </div>
 
-                        <!-- Sélection de la durée -->
-                        <div class="mb-3">
-                            <label for="runtimeMinutes" class="form-label">Durée (min) <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control bg-dark text-light" id="runtimeMinutes" name="runtimeMinutes" min="1" max="600" required>
-                            <small class="text-light">Durée en minutes (max 600 minutes)</small>
-                        </div>
-
-                        <!-- Genres -->
-                        <div class="mb-3">
-                            <label class="form-label">Genres <span class="text-danger">*</span></label>
-                            <div class="row">
-                                <?php foreach ($genres as $genre): ?>
-                                    <div class="col-md-3 mb-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="genres[]" value="<?= $genre['genre_id'] ?>" id="genre<?= $genre['genre_id'] ?>">
-                                            <label class="form-check-label text-light" for="genre<?= $genre['genre_id'] ?>">
-                                                <?= htmlspecialchars($genre['genre_name']) ?>
-                                            </label>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
+                            <!-- Sélection de la durée -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="runtimeMinutes" class="form-label">Durée (min) <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control bg-dark text-light" id="runtimeMinutes" name="runtimeMinutes" min="1" max="600" value="<?= isset($formData['runtimeMinutes']) ? htmlspecialchars($formData['runtimeMinutes']) : '' ?>" required>
+                                    <small class="text-muted">Durée en minutes (max 600 minutes)</small>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Réalisateur -->
+                        <!-- Film pour adulte (Switch) - Style simplifié -->
                         <div class="mb-3">
-                            <label for="director" class="form-label">Réalisateur <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control bg-dark text-light" id="director" name="director" value="<?= isset($_POST['director']) ? htmlspecialchars($_POST['director']) : '' ?>" required>
-                            <input type="hidden" name="director_id" id="director_id" value="<?= isset($_POST['director_id']) ? $_POST['director_id'] : '' ?>">
-
-                            <!-- Recherche pour le réalisateur -->
-                            <form method="POST" action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker">
-                                <input type="text" name="search_term" class="form-control bg-dark text-light" placeholder="Rechercher un réalisateur">
-                                <input type="hidden" name="search_type" value="director">
-                                <button type="submit" class="btn btn-secondary">Rechercher</button>
-                            </form>
-                            <?php if ($searchResult && $_POST['search_type'] == 'director'): ?>
-                                <ul class="list-group mt-2">
-                                    <?php foreach ($searchResult as $person): ?>
-                                        <li class="list-group-item">
-                                            <a href="javascript:void(0);" onclick="document.getElementById('director').value = '<?= htmlspecialchars($person['primaryName']) ?>'; document.getElementById('director_id').value = '<?= $person['perso_id'] ?>';">
-                                                <?= htmlspecialchars($person['primaryName']) ?>
-                                            </a>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endif; ?>
+                            <div class="card bg-dark border-warning mb-3">
+                                <div class="card-body py-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="text-warning mb-0">Film pour adulte</h5>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="isAdult" name="isAdult" value="1" <?= isset($formData['isAdult']) ? 'checked' : '' ?>>
+                                            <label class="form-check-label text-light ms-2" for="isAdult">Contenu réservé aux adultes</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Scénariste -->
+                        <!-- Genres - Style amélioré -->
                         <div class="mb-3">
-                            <label for="writer" class="form-label">Scénariste <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control bg-dark text-light" id="writer" name="writer" value="<?= isset($_POST['writer']) ? htmlspecialchars($_POST['writer']) : '' ?>" required>
-                            <input type="hidden" name="writer_id" id="writer_id" value="<?= isset($_POST['writer_id']) ? $_POST['writer_id'] : '' ?>">
-
-                            <!-- Recherche pour le scénariste -->
-                            <form method="POST" action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker">
-                                <input type="text" name="search_term" class="form-control bg-dark text-light" placeholder="Rechercher un scénariste">
-                                <input type="hidden" name="search_type" value="writer">
-                                <button type="submit" class="btn btn-secondary">Rechercher</button>
-                            </form>
-                            <?php if ($searchResult && $_POST['search_type'] == 'writer'): ?>
-                                <ul class="list-group mt-2">
-                                    <?php foreach ($searchResult as $person): ?>
-                                        <li class="list-group-item">
-                                            <a href="javascript:void(0);" onclick="document.getElementById('writer').value = '<?= htmlspecialchars($person['primaryName']) ?>'; document.getElementById('writer_id').value = '<?= $person['perso_id'] ?>';">
-                                                <?= htmlspecialchars($person['primaryName']) ?>
-                                            </a>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endif; ?>
+                            <label class="form-label">Genres <span class="text-danger">*</span></label>
+                            <div class="card bg-dark border-warning">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <?php foreach ($genres as $genre): ?>
+                                            <div class="col-md-3 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="genres[]" value="<?= $genre['genre_id'] ?>" id="genre<?= $genre['genre_id'] ?>"
+                                                    <?= isset($formData['genres']) && in_array($genre['genre_id'], $formData['genres']) ? 'checked' : '' ?>>
+                                                    <label class="form-check-label text-light" for="genre<?= $genre['genre_id'] ?>">
+                                                        <?= htmlspecialchars($genre['genre_name']) ?>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Acteur principal -->
-                        <div class="mb-3">
-                            <label for="actor" class="form-label">Acteur principal <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control bg-dark text-light" id="actor" name="actor" value="<?= isset($_POST['actor']) ? htmlspecialchars($_POST['actor']) : '' ?>" required>
-                            <input type="hidden" name="actor_id" id="actor_id" value="<?= isset($_POST['actor_id']) ? $_POST['actor_id'] : '' ?>">
+                        <!-- Section commune pour la recherche de personnes -->
+                        <div class="mb-4">
+                            <div class="card bg-dark border-warning">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="text-warning mb-0">Recherche de personnes</h5>
+                                    <?php if ($showSearchResults): ?>
+                                        <button type="button" id="hideSearchResults" class="btn btn-sm btn-outline-warning">Masquer les résultats</button>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="card-body">
+                                    <div class="input-group mb-3">
+                                        <input type="text" id="searchPersonInput" name="search_term" class="form-control bg-dark text-light" placeholder="Rechercher une personne" value="<?= isset($_POST['search_term']) ? htmlspecialchars($_POST['search_term']) : '' ?>">
+                                        <select class="form-select bg-dark text-light" name="search_type" id="searchType">
+                                            <option value="director" <?= isset($_POST['search_type']) && $_POST['search_type'] == 'director' ? 'selected' : '' ?>>Réalisateur</option>
+                                            <option value="writer" <?= isset($_POST['search_type']) && $_POST['search_type'] == 'writer' ? 'selected' : '' ?>>Scénariste</option>
+                                            <option value="actor" <?= isset($_POST['search_type']) && $_POST['search_type'] == 'actor' ? 'selected' : '' ?>>Acteur</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-warning" id="searchPersonBtn">Rechercher</button>
+                                    </div>
 
-                            <!-- Recherche pour l'acteur -->
-                            <form method="POST" action="<?= $_SERVER['PHP_SELF'] ?>?element=pages&action=Maker">
-                                <input type="text" name="search_term" class="form-control bg-dark text-light" placeholder="Rechercher un acteur">
-                                <input type="hidden" name="search_type" value="actor">
-                                <button type="submit" class="btn btn-secondary">Rechercher</button>
-                            </form>
-                            <?php if ($searchResult && $_POST['search_type'] == 'actor'): ?>
-                                <ul class="list-group mt-2">
-                                    <?php foreach ($searchResult as $person): ?>
-                                        <li class="list-group-item">
-                                            <a href="javascript:void(0);" onclick="document.getElementById('actor').value = '<?= htmlspecialchars($person['primaryName']) ?>'; document.getElementById('actor_id').value = '<?= $person['perso_id'] ?>';">
-                                                <?= htmlspecialchars($person['primaryName']) ?>
-                                            </a>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endif; ?>
+                                    <!-- Résultats de recherche -->
+                                    <div id="searchResultsContainer" class="<?= $showSearchResults ? '' : 'd-none' ?>">
+                                        <?php if (!empty($searchResult)): ?>
+                                            <div class="search-results p-2 mb-3 border border-warning rounded">
+                                                <h5 class="text-warning">Résultats de la recherche</h5>
+                                                <ul class="list-group">
+                                                    <?php foreach ($searchResult as $person): ?>
+                                                        <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                                                            <span class="text-truncate me-2"><?= htmlspecialchars($person['primaryName']) ?></span>
+                                                            <button type="button" class="btn btn-sm btn-outline-warning add-person" 
+                                                                data-id="<?= $person['perso_id'] ?>" 
+                                                                data-name="<?= htmlspecialchars($person['primaryName']) ?>" 
+                                                                data-type="<?= isset($_POST['search_type']) ? $_POST['search_type'] : 'director' ?>">
+                                                                +
+                                                            </button>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sections pour les personnes sélectionnées - Style amélioré -->
+                        <div class="row mb-3">
+                            <!-- Réalisateurs -->
+                            <div class="col-md-4">
+                                <div class="card bg-dark border-warning h-100">
+                                    <div class="card-header bg-dark text-warning">
+                                        <h5 class="mb-0">Réalisateurs</h5>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <ul class="list-group selected-directors-list">
+                                            <?php if (isset($selectedDirectors) && !empty($selectedDirectors)): ?>
+                                                <?php foreach ($selectedDirectors as $index => $directorData): ?>
+                                                    <?php
+                                                    list($directorId, $directorName) = explode('|', $directorData);
+                                                    ?>
+                                                    <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                                                        <span class="text-truncate me-2"><?= htmlspecialchars($directorName) ?></span>
+                                                        <input type="hidden" name="directors[]" value="<?= $directorId ?>|<?= htmlspecialchars($directorName) ?>">
+                                                        <button type="button" class="btn btn-sm btn-outline-danger remove-person">×</button>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Scénaristes -->
+                            <div class="col-md-4">
+                                <div class="card bg-dark border-warning h-100">
+                                    <div class="card-header bg-dark text-warning">
+                                        <h5 class="mb-0">Scénaristes</h5>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <ul class="list-group selected-writers-list">
+                                            <?php if (isset($selectedWriters) && !empty($selectedWriters)): ?>
+                                                <?php foreach ($selectedWriters as $index => $writerData): ?>
+                                                    <?php
+                                                    list($writerId, $writerName) = explode('|', $writerData);
+                                                    ?>
+                                                    <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                                                        <span class="text-truncate me-2"><?= htmlspecialchars($writerName) ?></span>
+                                                        <input type="hidden" name="writers[]" value="<?= $writerId ?>|<?= htmlspecialchars($writerName) ?>">
+                                                        <button type="button" class="btn btn-sm btn-outline-danger remove-person">×</button>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Acteurs -->
+                            <div class="col-md-4">
+                                <div class="card bg-dark border-warning h-100">
+                                    <div class="card-header bg-dark text-warning">
+                                        <h5 class="mb-0">Acteurs</h5>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <ul class="list-group selected-actors-list">
+                                            <?php if (isset($selectedActors) && !empty($selectedActors)): ?>
+                                                <?php foreach ($selectedActors as $index => $actorData): ?>
+                                                    <?php
+                                                    list($actorId, $actorName) = explode('|', $actorData);
+                                                    ?>
+                                                    <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                                                        <span class="text-truncate me-2"><?= htmlspecialchars($actorName) ?></span>
+                                                        <input type="hidden" name="actors[]" value="<?= $actorId ?>|<?= htmlspecialchars($actorName) ?>">
+                                                        <button type="button" class="btn btn-sm btn-outline-danger remove-person">×</button>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Description -->
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control bg-dark text-light" id="description" name="description" rows="3"></textarea>
+                            <textarea class="form-control bg-dark text-light" id="description" name="description" rows="3"><?= isset($formData['description']) ? htmlspecialchars($formData['description']) : '' ?></textarea>
                         </div>
 
-                        <!-- Boutons -->
+                        <!-- Boutons - Taille réduite -->
                         <div class="row mt-4">
                             <div class="col-md-6">
                                 <a href="?element=media&action=list" class="btn btn-secondary w-100">Annuler</a>
@@ -168,9 +241,204 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term'])) {
                                 <button type="submit" class="btn btn-warning w-100">Enregistrer</button>
                             </div>
                         </div>
+
+                        <!-- Champ caché pour maintenir la position de la page -->
+                        <input type="hidden" name="scrollPosition" id="scrollPosition" value="0">
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Restaurer la position de défilement
+    if ('<?= isset($_POST['scrollPosition']) ?>') {
+        window.scrollTo(0, <?= isset($_POST['scrollPosition']) ? intval($_POST['scrollPosition']) : 0 ?>);
+    }
+    
+    // Enregistrer la position de défilement avant la soumission du formulaire
+    document.getElementById('mediaForm').addEventListener('submit', function() {
+        document.getElementById('scrollPosition').value = window.pageYOffset || document.documentElement.scrollTop;
+    });
+    
+    // Masquer les résultats de recherche
+    const hideSearchBtn = document.getElementById('hideSearchResults');
+    if (hideSearchBtn) {
+        hideSearchBtn.addEventListener('click', function() {
+            document.getElementById('searchResultsContainer').classList.add('d-none');
+            this.classList.add('d-none');
+        });
+    }
+    
+    // Fonction pour vérifier si une personne existe déjà dans une liste
+    function personExistsInList(personId, listSelector) {
+        const existingInputs = document.querySelectorAll(`${listSelector} input[type="hidden"]`);
+        for (let input of existingInputs) {
+            const value = input.value;
+            const id = value.split('|')[0];
+            if (id === personId) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // Recherche de personne - ajouter au formulaire sans recharger
+    document.querySelectorAll('.add-person').forEach(function(button) {
+        button.addEventListener('click', function() {
+            let personId = this.getAttribute('data-id');
+            let personName = this.getAttribute('data-name');
+            let personType = this.getAttribute('data-type');
+            let listContainer;
+            let listSelector;
+            
+            // Sélectionner la liste appropriée en fonction du type
+            if (personType === 'director') {
+                listContainer = document.querySelector('.selected-directors-list');
+                listSelector = '.selected-directors-list';
+            } else if (personType === 'writer') {
+                listContainer = document.querySelector('.selected-writers-list');
+                listSelector = '.selected-writers-list';
+            } else if (personType === 'actor') {
+                listContainer = document.querySelector('.selected-actors-list');
+                listSelector = '.selected-actors-list';
+            }
+            
+            // Vérifier si la personne existe déjà dans la liste
+            if (personExistsInList(personId, listSelector)) {
+                alert('Cette personne est déjà ajoutée à la liste !');
+                return;
+            }
+            
+            // Créer un nouvel élément de liste pour la personne
+            let listItem = document.createElement('li');
+            listItem.className = 'list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center';
+            
+            // Créer un span pour le nom avec text-truncate pour gérer les noms longs
+            let nameSpan = document.createElement('span');
+            nameSpan.className = 'text-truncate me-2';
+            nameSpan.textContent = personName;
+            
+            // Créer l'input caché
+            let hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = personType + 's[]';
+            hiddenInput.value = personId + '|' + personName;
+            
+            // Créer le bouton de suppression
+            let removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'btn btn-sm btn-outline-danger remove-person';
+            removeButton.textContent = '×';
+            
+            // Ajouter les éléments à l'élément de liste
+            listItem.appendChild(nameSpan);
+            listItem.appendChild(hiddenInput);
+            listItem.appendChild(removeButton);
+            
+            // Ajouter l'élément à la liste
+            listContainer.appendChild(listItem);
+            
+            // Ajouter un gestionnaire d'événements pour le bouton de suppression
+            removeButton.addEventListener('click', function() {
+                listItem.remove();
+            });
+        });
+    });
+    
+    // Supprimer une personne de la liste
+    document.querySelectorAll('.remove-person').forEach(function(button) {
+        button.addEventListener('click', function() {
+            this.closest('li').remove();
+        });
+    });
+});
+</script>
+
+<style>
+/* Style de base pour le formulaire */
+.card {
+    border-radius: 8px;
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+/* Style simplifié pour le switch */
+.form-switch .form-check-input {
+    width: 2.5em;
+    height: 1.2em;
+    margin-top: 0.25rem;
+    background-color: #495057;
+    border-color: #6c757d;
+    cursor: pointer;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+/* Style amélioré pour la sélection des genres */
+.form-check-input:checked {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+/* Style pour les listes de personnes */
+.list-group-item {
+    margin-bottom: 4px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    border-radius: 4px !important;
+}
+
+/* Style pour les boutons d'ajout et de suppression */
+.remove-person, .add-person {
+    padding: 0 6px;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Style pour les boutons */
+.btn {
+    font-size: 0.95rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 4px;
+}
+
+.btn-sm {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Style pour le focus des inputs */
+.form-control:focus, .form-select:focus, .form-check-input:focus {
+    border-color: rgba(255, 193, 7, 0.5);
+    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+}
+
+/* Amélioration des cartes pour les personnes */
+.card-header.bg-dark {
+    background-color: #1a1a1a !important;
+}
+
+.border-warning {
+    border-color: rgba(255, 193, 7, 0.5) !important;
+}
+
+/* Style pour les textes d'aide */
+.text-muted {
+    color: #adb5bd !important;
+    font-size: 0.8rem;
+}
+</style>
