@@ -41,13 +41,6 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
                             <small class="text-muted">Laissez vide si la personne est encore en vie.</small>
                         </div>
 
-                        <!-- Profession principale -->
-                        <div class="mb-3">
-                            <label for="primaryProfession" class="form-label">Profession principale</label>
-                            <input type="text" class="form-control bg-dark text-light border-secondary" id="primaryProfession" name="primaryProfession">
-                            <small class="text-muted">Par exemple : acteur, réalisateur, scénariste...</small>
-                        </div>
-
                         <!-- Boutons -->
                         <div class="d-flex justify-content-between mt-4">
                             <a href="index.php" class="btn btn-outline-secondary">Annuler</a>
