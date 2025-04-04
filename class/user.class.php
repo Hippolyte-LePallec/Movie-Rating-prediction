@@ -44,7 +44,7 @@ class User {
         try {
             // Préparation de la requête pour récupérer l'utilisateur
             $stmt = $this->pdo->prepare(
-                "SELECT * admin 
+                "SELECT * 
                  FROM mp_users 
                  WHERE username = :username"
             );

@@ -5,6 +5,12 @@ require_once(dirname(__FILE__) . '/lib/security.lib.php');
 require_once(dirname(__FILE__) . '/lib/myproject.lib.php');
 $bd = require(dirname(__FILE__). '/lib/mypdo.php');
 
+// Vérification de l'authentification
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    header('Location: login.php');
+    exit();
+}
+
 // require_once(dirname(__FILE__) . '/class/myDbClass.php');
 if (GETPOST('debug') == true) {
     ini_set('display_errors', 1);
