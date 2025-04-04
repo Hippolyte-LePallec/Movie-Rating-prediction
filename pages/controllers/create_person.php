@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':deathYear', $deathYear);
         $stmt->execute();
 
+        // Redirection après succès
         header('Location: ../../index.php?element=pages&action=PersonList&success=1');
         exit;
     } catch (PDOException $e) {
