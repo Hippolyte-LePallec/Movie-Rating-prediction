@@ -57,7 +57,7 @@
                     <h5 class="mb-0 text-warning"><i class="fas fa-chart-pie me-2"></i>Répartition par Genre</h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="chart-genres" width="100%" height="400"></canvas>
+                    <canvas id="chart-genres"></canvas>
                 </div>
             </div>
         </div>
@@ -83,6 +83,7 @@
         data: genreData,
         options: {
             responsive: true,
+            maintainAspectRatio: false, // Désactive le ratio pour remplir l'espace
             plugins: {
                 legend: {
                     position: 'top',
@@ -98,7 +99,5 @@
         }
     };
 
-
     const genreChart = new Chart(document.getElementById('chart-genres'), genreConfig);
-
 </script>
