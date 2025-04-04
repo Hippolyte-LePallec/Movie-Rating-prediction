@@ -16,7 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/scripts.js"></script>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="img/tux.png">
+    <link rel="icon" type="image/png" href="img/raw.png">
 </head>
 
 <body>
