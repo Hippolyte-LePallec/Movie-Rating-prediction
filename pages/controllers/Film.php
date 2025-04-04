@@ -3,7 +3,7 @@ require_once(dirname(__FILE__) . '/../../class/film.class.php');
 
 // Paramètres de pagination
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$filmsPerPage = 100000;
+$filmsPerPage = 25;
 
 // Paramètre de recherche
 $searchTerm = isset($_POST['titre']) ? $_POST['titre'] : '';  // Récupération via POST
