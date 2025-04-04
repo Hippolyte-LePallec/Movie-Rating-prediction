@@ -43,7 +43,6 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
 
                         <!-- Boutons -->
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="index.php" class="btn btn-outline-secondary">Annuler</a>
                             <button type="submit" class="btn btn-warning">Créer</button>
                         </div>
                     </form>
