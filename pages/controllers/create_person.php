@@ -25,7 +25,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "Erreur : " . $e->getMessage();
     }
 }
-
-// Inclure la vue
-include(dirname(__FILE__) . '/../views/create_person.php');
 ?>

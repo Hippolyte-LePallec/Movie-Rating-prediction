@@ -68,7 +68,3 @@ require_once(dirname(__FILE__) . '/../../inc/head.php'); // Inclure le header gl
     }, false);
 })();
 </script>
-
-<?php
-require_once(dirname(__FILE__) . '/../../inc/footer.php'); // Inclure le footer global
-?>
