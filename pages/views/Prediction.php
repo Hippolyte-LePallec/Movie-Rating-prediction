@@ -1,173 +1,3 @@
-<?php
-require_once __DIR__ . '/../../class/personne.class.php';
-require_once __DIR__ . '/../../class/genre.class.php';
-require_once __DIR__ . '/../../class/rating.class.php';
-
-// Afficher toutes les erreurs
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-// Vérifier si la fonction n'existe pas déjà avant de la déclarer
-if (!function_exists('calculateGlobalPrediction')) {
-    function calculateGlobalPrediction($directors, $writers, $actors, $genreRating, $titleRating) {
-        $weights = [
-            'directors' => 0.30,  // 30% pour les réalisateurs
-            'writers' => 0.20,    // 20% pour les scénaristes
-            'actors' => 0.25,     // 25% pour les acteurs
-            'genres' => 0.15,     // 15% pour les genres
-            'title' => 0.10       // 10% pour le titre
-        ];
-        
-        $totalWeight = 0;
-        $weightedSum = 0;
-        
-        // Calcul pour les réalisateurs
-        if (!empty($directors)) {
-            $directorRating = array_sum(array_column($directors, 'rating')) / count($directors);
-            $weightedSum += $directorRating * $weights['directors'];
-            $totalWeight += $weights['directors'];
-        }
-        
-        // Calcul pour les scénaristes
-        if (!empty($writers)) {
-            $writerRating = array_sum(array_column($writers, 'rating')) / count($writers);
-            $weightedSum += $writerRating * $weights['writers'];
-            $totalWeight += $weights['writers'];
-        }
-        
-        // Calcul pour les acteurs
-        if (!empty($actors)) {
-            $actorRating = array_sum(array_column($actors, 'combined_rating')) / count($actors);
-            $weightedSum += $actorRating * $weights['actors'];
-            $totalWeight += $weights['actors'];
-        }
-        
-        // Ajout des notes de genre et titre
-        if ($genreRating > 0) {
-            $weightedSum += $genreRating * $weights['genres'];
-            $totalWeight += $weights['genres'];
-        }
-        
-        if ($titleRating > 0) {
-            $weightedSum += $titleRating * $weights['title'];
-            $totalWeight += $weights['title'];
-        }
-        
-        // Calcul de la moyenne pondérée finale
-        return ($totalWeight > 0) ? ($weightedSum / $totalWeight) : 0;
-    }
-}
-
-// Vérifier si la fonction n'existe pas déjà avant de la déclarer
-if (!function_exists('formatRating')) {
-    function formatRating($rating) {
-        return number_format($rating, 2, '.', '');
-    }
-}
-
-// Vérifier si la fonction n'existe pas déjà avant de la déclarer
-if (!function_exists('getRatingColorClass')) {
-    function getRatingColorClass($rating) {
-        if ($rating >= 8.5) return 'text-success';
-        if ($rating >= 7.0) return 'text-warning';
-        if ($rating >= 5.5) return 'text-info';
-        if ($rating >= 4.0) return 'text-secondary';
-        return 'text-danger';
-    }
-}
-
-// Vérifier si la fonction n'existe pas déjà avant de la déclarer
-if (!function_exists('getRatingDescription')) {
-    function getRatingDescription($rating) {
-        if ($rating >= 8.5) return 'Excellent';
-        if ($rating >= 7.0) return 'Très bon';
-        if ($rating >= 5.5) return 'Bon';
-        if ($rating >= 4.0) return 'Moyen';
-        if ($rating >= 3.0) return 'Passable';
-        return 'Faible';
-    }
-}
-
-// Instanciation des objets
-$personne = new Personne($db);
-$genre = new Genre($db);
-$actorRating = new ActorRating($db);
-
-// Vérifier si le formulaire a été soumis avec les données requises
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['primaryTitle'])) {
-    
-    // Récupération des données du formulaire
-    $title = $_POST['primaryTitle'];
-    $year = $_POST['startYear'];
-    $runtime = $_POST['runtimeMinutes'];
-    $isAdult = isset($_POST['isAdult']) ? 1 : 0;
-    $description = isset($_POST['description']) ? $_POST['description'] : '';
-    $genres = isset($_POST['genres']) ? $_POST['genres'] : [];
-    
-    // Récupération des personnes
-    $directors = [];
-    $writers = [];
-    $actors = [];
-    
-    // Traitement des directeurs
-    if (isset($_POST['directors']) && is_array($_POST['directors'])) {
-        foreach ($_POST['directors'] as $directorData) {
-            list($directorId, $directorName) = explode('|', $directorData);
-            $directors[] = [
-                'id' => $directorId,
-                'name' => $directorName,
-                'rating' => $actorRating->predictDirectorRatingWithGenres($directorId, $genres)
-            ];
-        }
-    }
-    
-    // Traitement des scénaristes
-    if (isset($_POST['writers']) && is_array($_POST['writers'])) {
-        foreach ($_POST['writers'] as $writerData) {
-            list($writerId, $writerName) = explode('|', $writerData);
-            $writers[] = [
-                'id' => $writerId,
-                'name' => $writerName,
-                'rating' => $actorRating->predictWriterRatingWithGenres($writerId, $genres)
-            ];
-        }
-    }
-    
-    // Traitement des acteurs
-    if (isset($_POST['actors']) && is_array($_POST['actors'])) {
-        foreach ($_POST['actors'] as $actorData) {
-            list($actorId, $actorName) = explode('|', $actorData);
-            
-            // Récupération des différentes notes de prédiction
-            $basicRating = $actorRating->predictActorRating($actorId);
-            $genreRating = $actorRating->predictActorRatingWithGenres($actorId, $genres);
-            $combinedRating = $actorRating->predictCombinedActorRating($actorId, $genres);
-            
-            $actors[] = [
-                'id' => $actorId,
-                'name' => $actorName,
-                'basic_rating' => $basicRating,
-                'genre_rating' => $genreRating,
-                'combined_rating' => $combinedRating
-            ];
-        }
-    }
-    
-    // Prédiction basée sur le titre
-    $titleRating = $actorRating->predictRatingByPartialTitle($title);
-    
-    // Prédiction basée sur les genres
-    $genreRating = $actorRating->predictCombinedGenreRating($genres);
-    
-    // Calcul de la prédiction globale
-    $globalPrediction = calculateGlobalPrediction($directors, $writers, $actors, $genreRating, $titleRating);
-} else {
-    // Rediriger vers la page de formulaire si accès direct à cette page
-    header('Location: ?element=pages&action=Maker');
-    exit;
-}
-?>
-
 <div class="container mt-4 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -184,30 +14,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['primaryTitle'])) {
                                 <div class="card-header bg-dark text-warning">
                                     <h4 class="mb-0">Information sur le média</h4>
                                 </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <p><strong>Année:</strong> <?= htmlspecialchars($year) ?></p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p><strong>Durée:</strong> <?= htmlspecialchars($runtime) ?> min</p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p><strong>Film pour adulte:</strong> <?= $isAdult ? 'Oui' : 'Non' ?></p>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p><strong>Appréciation:</strong> <span class="<?= getRatingColorClass($globalPrediction) ?>"><?= getRatingDescription($globalPrediction) ?></span></p>
-                                        </div>
-                                    </div>
-                                    
-                                    <?php if (!empty($genres)): ?>
-                                        <div class="mt-3">
-                                            <p><strong>Genres:</strong></p>
-                                            <div>
+                                <div class="card-body text-white">
+                                    <table class="table table-dark table-borderless table-striped mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row" class="w-30">Année :</th>
+                                                <td><?= htmlspecialchars($year) ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Durée :</th>
+                                                <td><?= htmlspecialchars($runtime) ?> min</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Film pour adulte :</th>
+                                                <td><?= $isAdult ? 'Oui' : 'Non' ?></td>
+                                            </tr>
+
+                                            <?php if (!empty($genres)): ?>
                                                 <?php 
+                                                // Récupération de tous les genres une seule fois
+                                                $allGenres = $genre->fetchAll();
                                                 $genreNames = [];
+
+                                                // Mapping des IDs reçus vers les noms
                                                 foreach ($genres as $genreId) {
-                                                    foreach ($genre->fetchAll() as $g) {
+                                                    foreach ($allGenres as $g) {
                                                         if ($g['genre_id'] == $genreId) {
                                                             $genreNames[] = $g['genre_name'];
                                                             break;
@@ -215,19 +46,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['primaryTitle'])) {
                                                     }
                                                 }
                                                 ?>
-                                                <?php foreach ($genreNames as $genreName): ?>
-                                                    <span class="badge bg-warning text-dark me-1"><?= htmlspecialchars($genreName) ?></span>
-                                                <?php endforeach; ?>
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if (!empty($description)): ?>
-                                        <div class="mt-3">
-                                            <p><strong>Description:</strong></p>
-                                            <p><?= nl2br(htmlspecialchars($description)) ?></p>
-                                        </div>
-                                    <?php endif; ?>
+                                                <tr>
+                                                    <th scope="row">Genres :</th>
+                                                    <td>
+                                                        <?php foreach ($genreNames as $genreName): ?>
+                                                            <span class="badge bg-warning text-dark me-1"><?= htmlspecialchars($genreName) ?></span>
+                                                        <?php endforeach; ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endif; ?>
+
+                                            <?php if (!empty($description)): ?>
+                                                <tr>
+                                                    <th scope="row">Description :</th>
+                                                    <td><?= nl2br(htmlspecialchars($description)) ?></td>
+                                                </tr>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -246,75 +82,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['primaryTitle'])) {
                                             <thead>
                                                 <tr>
                                                     <th>Facteur</th>
-                                                    <th class="text-end">Note prédite</th>
-                                                    <th class="text-center">Influence</th>
+                                                    <th class="text-center">Note prédite</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php if (!empty($directors)): ?>
                                                     <tr>
                                                         <td>Réalisateurs</td>
-                                                        <td class="text-end"><?= formatRating(array_sum(array_column($directors, 'rating')) / count($directors)) ?></td>
-                                                        <td class="text-center">
-                                                            <div class="progress bg-dark">
-                                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
-                                                                    Élevée
-                                                                </div>
-                                                            </div>
-                                                        </td>
+                                                        <td class="text-center"><?= formatRating(array_sum(array_column($directors, 'rating')) / count($directors)) ?></td>
                                                     </tr>
                                                 <?php endif; ?>
                                                 
                                                 <?php if (!empty($writers)): ?>
                                                     <tr>
                                                         <td>Scénaristes</td>
-                                                        <td class="text-end"><?= formatRating(array_sum(array_column($writers, 'rating')) / count($writers)) ?></td>
-                                                        <td class="text-center">
-                                                            <div class="progress bg-dark">
-                                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                                    Moyenne
-                                                                </div>
-                                                            </div>
-                                                        </td>
+                                                        <td class="text-center"><?= formatRating(array_sum(array_column($writers, 'rating')) / count($writers)) ?></td>
                                                     </tr>
                                                 <?php endif; ?>
                                                 
                                                 <?php if (!empty($actors)): ?>
                                                     <tr>
                                                         <td>Acteurs</td>
-                                                        <td class="text-end"><?= formatRating(array_sum(array_column($actors, 'combined_rating')) / count($actors)) ?></td>
-                                                        <td class="text-center">
-                                                            <div class="progress bg-dark">
-                                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                                                    Élevée
-                                                                </div>
-                                                            </div>
-                                                        </td>
+                                                        <td class="text-center"><?= formatRating(array_sum(array_column($actors, 'combined_rating')) / count($actors)) ?></td>
                                                     </tr>
                                                 <?php endif; ?>
                                                 
                                                 <tr>
                                                     <td>Genres</td>
-                                                    <td class="text-end"><?= formatRating($genreRating) ?></td>
-                                                    <td class="text-center">
-                                                        <div class="progress bg-dark">
-                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">
-                                                                Moyenne
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                
-                                                <tr>
-                                                    <td>Titre similaire</td>
-                                                    <td class="text-end"><?= formatRating($titleRating) ?></td>
-                                                    <td class="text-center">
-                                                        <div class="progress bg-dark">
-                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                                                                Faible
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                                    <td class="text-center"><?= formatRating($genreRating) ?></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -383,10 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['primaryTitle'])) {
                                                         <span><?= htmlspecialchars($actor['name']) ?></span>
                                                         <span class="badge bg-warning text-dark"><?= formatRating($actor['combined_rating']) ?></span>
                                                     </div>
-                                                    <div class="d-flex justify-content-between small">
-                                                        <span>Base: <?= formatRating($actor['basic_rating']) ?></span>
-                                                        <span>Genres: <?= formatRating($actor['genre_rating']) ?></span>
-                                                    </div>
                                                 </li>
                                             <?php endforeach; ?>
                                         </ul>
@@ -399,18 +190,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['primaryTitle'])) {
                     <!-- Boutons d'action -->
                     <div class="row mt-4">
                         <div class="col-md-6">
-                            <a href="?element=media&action=list" class="btn btn-secondary w-100">Retour à la liste</a>
+                            <!-- Bouton de retour au Maker -->
+                            <button type="button" class="btn w-100" onclick="document.getElementById('hiddenForm').submit();">Retour au Maker</button>
                         </div>
                         <div class="col-md-6">
-                            <a href="?element=pages&action=Maker" class="btn btn-warning w-100">Nouvelle prédiction</a>
+                            <!-- Bouton pour ajouter le film -->
+                            <button type="button" class="btn btn-warning w-100" onclick="document.getElementById('hiddenFormAddFilm').querySelector('button[type=submit]').click();">Ajouter le film</button>
                         </div>
                     </div>
+
+                    <!-- Formulaire caché -->
+                    <form method="POST" action="?element=pages&action=Maker" id="hiddenForm" style="display: none;">
+                        <input type="hidden" name="primaryTitle" value="<?= htmlspecialchars($title) ?>">
+                        <input type="hidden" name="startYear" value="<?= htmlspecialchars($year) ?>">
+                        <input type="hidden" name="runtimeMinutes" value="<?= htmlspecialchars($runtime) ?>">
+                        <input type="hidden" name="isAdult" value="<?= $isAdult ? 1 : 0 ?>">
+
+                        <!-- Envoi des genres sous forme de tableau -->
+                        <?php if (!empty($genres)): ?>
+                            <?php foreach ($genres as $genre): ?>
+                                <input type="hidden" name="genres[]" value="<?= htmlspecialchars($genre) ?>">
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
+                        <!-- Réalisateurs -->
+                        <?php if (isset($directors) && !empty($directors)): ?>
+                            <?php foreach ($directors as $director): ?>
+                                <input type="hidden" name="directors[]" value="<?= htmlspecialchars($director['id']) ?>|<?= htmlspecialchars($director['name']) ?>">
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
+                        <!-- Scénaristes -->
+                        <?php if (isset($writers) && !empty($writers)): ?>
+                            <?php foreach ($writers as $writer): ?>
+                                <input type="hidden" name="writers[]" value="<?= htmlspecialchars($writer['id']) ?>|<?= htmlspecialchars($writer['name']) ?>">
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
+                        <!-- Acteurs -->
+                        <?php if (isset($actors) && !empty($actors)): ?>
+                            <?php foreach ($actors as $actor): ?>
+                                <input type="hidden" name="actors[]" value="<?= htmlspecialchars($actor['id']) ?>|<?= htmlspecialchars($actor['name']) ?>">
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        
+                        <input type="hidden" name="description" value="<?= htmlspecialchars($description) ?>">
+                    </form>
+
+                    <!-- Formulaire caché pour ajouter le film -->
+                    <form id="hiddenFormAddFilm" method="POST" action="?element=pages&action=Prediction" style="display: none;">
+                        <input type="hidden" name="primaryTitle" value="<?= htmlspecialchars($title) ?>">
+                        <input type="hidden" name="isAdult" value="<?= $isAdult ? 1 : 0 ?>">
+                        <input type="hidden" name="startYear" value="<?= htmlspecialchars($year) ?>">
+                        <input type="hidden" name="runtimeMinutes" value="<?= htmlspecialchars($runtime) ?>">
+                        <input type="hidden" name="plot" value="<?= htmlspecialchars($description) ?>">
+                        <input type="hidden" name="genres" value="<?= implode(",", $genres) ?>">
+                        <input type="hidden" name="id_directeurs" value="<?= implodeRecursive($directors)?>">
+                        <input type="hidden" name="id_writers" value="<?= implodeRecursive($writers) ?>">
+                        <input type="hidden" name="id_actors" value="<?= implodeRecursive($actors) ?>">
+
+                        <button type="submit" name="submitForm" value="ajouter" style="display: none;"></button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <style>
 /* Style général */
 .card {

@@ -4,19 +4,16 @@ class Crew
     private $db;
     private $data = [];
 
-    public function __construct($dbConnection)
-    {
+    public function __construct($dbConnection){
         $this->db = $dbConnection;
     }
 
-    public function getData($key)
-    {
+    public function getData($key){
         return $this->data[$key] ?? null;
     }
 
   
-    public function getAllActorsWithFilms()
-    {
+    public function getAllActorsWithFilms(){
         $stmt = $this->db->prepare("
             SELECT p.perso_id, p.\"primaryName\", p.birth_year, p.death_year, p.profession, 
                    m.media_id, m.\"primaryTitle\", m.\"startYear\", m.\"runtimeMinutes\", m.media_url, c.job, c.characters, c.ordering
@@ -61,24 +58,22 @@ class Crew
         return $result;
     }
 
-    public function getCrewMembersByFilm($media_id)
-{
-    $stmt = $this->db->prepare("
-        SELECT p.perso_id, p.\"primaryName\", p.\"primaryProfession\", c.job, c.characters, c.ordering
-        FROM principal c
-        JOIN personne p ON c.perso_id = p.perso_id
-        WHERE c.media_id = :media_id
-        ORDER BY c.ordering
-    ");
+    public function getCrewMembersByFilm($media_id){
+        $stmt = $this->db->prepare("
+            SELECT p.perso_id, p.\"primaryName\", p.\"primaryProfession\", c.job, c.characters, c.ordering
+            FROM principal c
+            JOIN personne p ON c.perso_id = p.perso_id
+            WHERE c.media_id = :media_id
+            ORDER BY c.ordering
+        ");
 
-    $stmt->bindParam(':media_id', $media_id, PDO::PARAM_STR);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        $stmt->bindParam(':media_id', $media_id, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
-    public function getFilmsByCrewMember($perso_id)
-    {
+    public function getFilmsByCrewMember($perso_id){
         $stmt = $this->db->prepare("
             SELECT m.media_id, m.primaryTitle, m.startYear, m.runtimeMinutes, m.media_url, c.job
             FROM principal c
@@ -92,9 +87,5 @@ class Crew
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
-
 }
 ?>

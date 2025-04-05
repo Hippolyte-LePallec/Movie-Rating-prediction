@@ -79,5 +79,123 @@ class User {
         // Retourner tous les films trouvés sous forme de tableau associatif
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function addFilm($primaryTitle, $isAdult, $startYear, $runtimeMinutes, $imageUrl, $plot, $genres, $id_directeurs, $id_writers, $id_actors) {
+        // Démarrer une transaction
+        $this->pdo->beginTransaction();
+    
+        try {
+            // Ajouter le film et la relation dans media_genre
+            $query = "SELECT ajout_media(
+                :primaryTitle, 
+                :isAdult, 
+                :startYear, 
+                :runtimeMinutes, 
+                :imageUrl, 
+                :plot, 
+                :genres
+            ) AS media_id";
+    
+            $stmt = $this->pdo->prepare($query);
+    
+            $stmt->bindParam(':primaryTitle', $primaryTitle, PDO::PARAM_STR);
+            $stmt->bindParam(':isAdult', $isAdult, PDO::PARAM_INT);
+            $stmt->bindParam(':startYear', $startYear, PDO::PARAM_INT);
+            $stmt->bindParam(':runtimeMinutes', $runtimeMinutes, PDO::PARAM_STR);
+            $stmt->bindParam(':imageUrl', $imageUrl, PDO::PARAM_STR);
+            $stmt->bindParam(':plot', $plot, PDO::PARAM_STR);
+
+            var_dump($genres);
+    
+            $stmt->bindParam(':genres', $genres);
+    
+            if (!$stmt->execute()) {
+                throw new Exception('Erreur lors de l\'ajout du film.');
+            }
+    
+            // Récupérer l'ID du média inséré
+            $media_id = $stmt->fetchColumn();
+    
+            // Insérer le crew (directeurs et scénaristes)
+            $stmt = $this->pdo->prepare("
+                INSERT INTO crew (media_id, directors, writers)
+                VALUES (:media_id, :directors, :writers)
+            ");
+    
+            $stmt->bindParam(':media_id', $media_id);
+            $stmt->bindParam(':directors', $id_directeurs);
+            $stmt->bindParam(':writers', $id_writers);
+    
+            if (!$stmt->execute()) {
+                throw new Exception('Erreur lors de l\'ajout du crew.');
+            }
+    
+            // Insérer les acteurs dans principal
+            $query = "INSERT INTO principal (media_id, ordering, perso_id, cat_id, job, characters) 
+                    VALUES (:media_id, :ordering, :perso_id, :cat_id, :job, :characters)";
+            
+            $stmt = $this->pdo->prepare($query);
+    
+            // Itération sur chaque acteur
+            $i = 0;
+            foreach ($id_actors as $id_actor) {
+                $stmt->bindParam(':media_id', $media_id, PDO::PARAM_STR);
+                $stmt->bindParam(':ordering', $i, PDO::PARAM_INT);
+                $stmt->bindParam(':perso_id', $id_actor, PDO::PARAM_STR);
+
+                $cat_id = 1;
+                $job = "N/A";
+                $characters = "N/A";
+
+                $stmt->bindParam(':cat_id', $cat_id, PDO::PARAM_INT);
+                $stmt->bindParam(':job', $job, PDO::PARAM_STR);
+                $stmt->bindParam(':characters', $characters, PDO::PARAM_STR);
+
+                
+                if (!$stmt->execute()) {
+                    throw new Exception('Erreur lors de l\'ajout des acteurs.');
+                }
+                $i++;
+            }
+    
+            // Appeler la méthode pour ajouter le film à l'utilisateur
+            if (!$this->addFilmToUser($media_id)) {
+                throw new Exception('Erreur lors de l\'ajout du film à l\'utilisateur.');
+            }
+    
+            // Si toutes les étapes ont réussi, on valide la transaction
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            // En cas d'erreur, annuler la transaction
+            $this->pdo->rollBack();
+            return $e;
+        }
+    }
+    
+
+    public function addFilmToUser($media_id) {
+        // Vérifiez que $this->rowid est défini avant de l'utiliser
+        if (isset($this->rowid) && !empty($this->rowid)) {
+            try {
+                $stmt = $this->pdo->prepare("
+                    INSERT INTO media_user (media_id, rowid) VALUES (:media_id, :rowid)
+                ");
+    
+                $stmt->bindParam(":media_id", $media_id, PDO::PARAM_STR);
+                $stmt->bindParam(":rowid", $this->rowid, PDO::PARAM_INT);
+    
+                if ($stmt->execute()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (PDOException $e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
 ?>

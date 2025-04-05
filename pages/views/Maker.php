@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term']) && !em
                     <h3 class="text-warning mb-0">Ajouter un média</h3>
                 </div>
                 <div class="card-body">
-                    <form action="index.php?element=pages&action=Prediction" method="post" class="needs-validation" novalidate id="mediaForm">
+                    <form action="index.php?element=pages&action=Prediction" method="POST" class="needs-validation" novalidate id="mediaForm">
                         <!-- Informations de base -->
                         <div class="mb-3">
                             <label for="primaryTitle" class="form-label">Titre <span class="text-danger">*</span></label>
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term']) && !em
                             </div>
                         </div>
 
-                        <!-- Sections pour les personnes sélectionnées - Style amélioré -->
+                        <!-- Sections pour les personnes sélectionnées -->
                         <div class="row mb-3">
                             <!-- Réalisateurs -->
                             <div class="col-md-4">

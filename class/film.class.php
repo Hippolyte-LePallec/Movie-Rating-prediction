@@ -206,11 +206,6 @@ public function getTotalCountBySearch($searchTerm)
     $stmt->execute();
     return $stmt->fetchColumn();
 }
-
-
-
-
-
 }
 ?>
 
