@@ -201,7 +201,7 @@
                         <!-- Boutons - Taille réduite -->
                         <div class="row mt-4">
                             <div class="col-md-6">
-                                <a href="?element=media&action=list" class="btn btn-secondary w-100">Annuler</a>
+                                <a href="?element=pages&action=Film" class="btn btn-secondary w-100">Annuler</a>
                             </div>
                             <div class="col-md-6">
                                 <button type="submit" class="btn btn-warning w-100">Prédire</button>
