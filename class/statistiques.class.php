@@ -116,17 +116,20 @@ class Stat
     public function getAverageDurationByDecade()
     {
         $stmt = $this->db->prepare("
-        SELECT
-            FLOOR(\"startYear\" / 10) * 10 AS decade,
-            AVG(CAST(NULLIF(m.\"runtimeMinutes\", '\\N') AS INTEGER)) AS avg_runtime
-        FROM media m
-        GROUP BY decade
-        ORDER BY decade
-    ");
+            SELECT
+                FLOOR(\"startYear\" / 10) * 10 AS decade,
+                AVG(
+                    CASE
+                        WHEN \"runtimeMinutes\" ~ '^\d+$' THEN CAST(\"runtimeMinutes\" AS INTEGER)
+                        ELSE NULL
+                    END
+                ) AS avg_runtime
+            FROM media m
+            GROUP BY decade
+            ORDER BY decade
+        ");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
 }
 ?>
