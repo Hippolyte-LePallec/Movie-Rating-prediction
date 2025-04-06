@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
 
         $message = "Personne créée avec succès.";
+        header("Location: http://localhost/Movie-Rating-prediction/index.php?element=pages&action=Film");
     } catch (PDOException $e) {
         $message = "Erreur : " . $e->getMessage();
     }
