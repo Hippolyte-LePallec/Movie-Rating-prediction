@@ -1,7 +1,6 @@
-<?php include('../../inc/head.php'); ?>
-<?php include('../../inc/top.php'); ?>
-
-<?php
+<?php 
+include('../../inc/head.php');
+include('../../inc/top.php'); 
 require_once __DIR__ . '/../../class/personne.class.php';
 require_once __DIR__ . '/../../class/genre.class.php';
 
@@ -33,6 +32,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term']) && !em
 } else {
     $formData = $_POST;
 }
+include('../../inc/footer.php'); 
 ?>
-
-<?php include('../../inc/footer.php'); ?>
