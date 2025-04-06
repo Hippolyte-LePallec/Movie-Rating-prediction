@@ -32,5 +32,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_term']) && !em
 } else {
     $formData = $_POST;
 }
-include('../../inc/footer.php'); 
 ?>
