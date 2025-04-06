@@ -156,7 +156,7 @@ if (isset($_POST['submitForm']) && $_POST['submitForm'] === 'ajouter') {
         // Ajout du film
         $resultat = $user->addFilm($primaryTitle, $isAdult, $startYear, $runtimeMinutes, "", $plot, $genresFormatted, $id_directeurs, $id_writers, $id_actors);
 
-        header("Location: http://localhost/Movie-Rating-prediction/index.php?element=pages&action=User");
+        header("Location: index.php?element=pages&action=User");
         exit;
     } else {
         echo "ERREUR : Le titre du film ou les genres sont manquants.";
